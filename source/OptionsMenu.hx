@@ -27,7 +27,6 @@ class OptionsMenu extends MusicBeatState
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		controlsStrings = CoolUtil.coolStringFile(
 			(FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + 
-			"\n" + (FlxG.save.data.newInput ? "New input" : "Old Input") + 
 			"\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + 
 			"\nAccuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on") + 
 			"\nSong Position " + (!FlxG.save.data.songPosition ? "off" : "on") +
@@ -92,7 +91,7 @@ class OptionsMenu extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (curSelected != 8)
+				if (curSelected != 7)
 					grpControls.remove(grpControls.members[curSelected]);
 				switch(curSelected)
 				{
@@ -108,48 +107,42 @@ class OptionsMenu extends MusicBeatState
 							controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 						
 					case 1:
-						FlxG.save.data.newInput = !FlxG.save.data.newInput;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.newInput ? "New input" : "Old Input"), true, false);
+						FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll'), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 1;
 						grpControls.add(ctrl);
 					case 2:
-						FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll'), true, false);
+						FlxG.save.data.accuracyDisplay = !FlxG.save.data.accuracyDisplay;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Accuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 2;
 						grpControls.add(ctrl);
 					case 3:
-						FlxG.save.data.accuracyDisplay = !FlxG.save.data.accuracyDisplay;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Accuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on"), true, false);
+						FlxG.save.data.songPosition = !FlxG.save.data.songPosition;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Song Position " + (!FlxG.save.data.songPosition ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 3;
 						grpControls.add(ctrl);
 					case 4:
-						FlxG.save.data.songPosition = !FlxG.save.data.songPosition;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Song Position " + (!FlxG.save.data.songPosition ? "off" : "on"), true, false);
+						FlxG.save.data.showLeftArrows = !FlxG.save.data.showLeftArrows;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Show Left Arrows " + (!FlxG.save.data.showLeftArrows ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 4;
 						grpControls.add(ctrl);
 					case 5:
-						FlxG.save.data.showLeftArrows = !FlxG.save.data.showLeftArrows;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Show Left Arrows " + (!FlxG.save.data.showLeftArrows ? "off" : "on"), true, false);
+						FlxG.save.data.centerArrows = !FlxG.save.data.centerArrows;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Center Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 5;
 						grpControls.add(ctrl);
 					case 6:
-						FlxG.save.data.centerArrows = !FlxG.save.data.centerArrows;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Center Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on"), true, false);
+						FlxG.save.data.etternaMode = !FlxG.save.data.etternaMode;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Etterna Mode " + (!FlxG.save.data.etternaMode ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 6;
 						grpControls.add(ctrl);
 					case 7:
-						FlxG.save.data.etternaMode = !FlxG.save.data.etternaMode;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Etterna Mode " + (!FlxG.save.data.etternaMode ? "off" : "on"), true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 7;
-						grpControls.add(ctrl);
-					case 8:
 						trace('switch');
 						FlxG.switchState(new LoadReplayState());
 				}

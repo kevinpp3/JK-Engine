@@ -184,7 +184,7 @@ class Note extends FlxSprite
 		{
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
 			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-				&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset)
+				&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset * 0.5)
 				canBeHit = true;
 			else
 				canBeHit = false;
@@ -193,17 +193,17 @@ class Note extends FlxSprite
 
 			if(canBeHit)
 			{
-				if(noteDiff > Conductor.safeZoneOffset * 0.95)
+				if(noteDiff > Conductor.safeZoneOffset * 0.50)
 					rating = "shit";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.95)
+				else if(noteDiff < Conductor.safeZoneOffset * -0.50)
 					rating = "shit";
-				else if(noteDiff > Conductor.safeZoneOffset * 0.70)
+				else if(noteDiff > Conductor.safeZoneOffset * 0.40)
 					rating = "bad";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.75)
+				else if(noteDiff < Conductor.safeZoneOffset * -0.40)
 					rating = "bad";
-				else if(noteDiff > Conductor.safeZoneOffset * 0.45)
+				else if(noteDiff > Conductor.safeZoneOffset * 0.25)
 					rating = "good";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.45)
+				else if(noteDiff < Conductor.safeZoneOffset * -0.25)
 					rating = "good";
 				else
 					rating = "sick";

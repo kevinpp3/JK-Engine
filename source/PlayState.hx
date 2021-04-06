@@ -2022,7 +2022,7 @@ class PlayState extends MusicBeatState
 	var timeShown = 0;
 	var currentTimingShown:FlxText = null;
 
-	private function popUpScore(daNote:Float):Void
+	private function popUpScore(daNote:Note):Void
 		{
 			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 			var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);

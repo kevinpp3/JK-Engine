@@ -1487,12 +1487,12 @@ class PlayState extends MusicBeatState
 			ranking = "(GFC)";
 		else if ((shits < 10 && shits != 0 || bads < 10 && bads != 0) && misses == 0) // Single Digit Combo Breaks
 			ranking = "(SDCB)";
-		else if (misses == 0 && (shits >= 10 || bads >= 10)) // Regular FC
+		else if (misses == 0 && (shits >= 10)) // Regular FC
 			ranking = "(FC)";
-		else if (misses >= 10 || (shits >= 10 || bads >= 10)) // Combo Breaks
+		else if (misses >= 10 || (shits >= 10)) // Combo Breaks
 			ranking = "(CB)";
 		else
-			ranking = "";
+			ranking = "(Clear)";
 
 		// WIFE TIME :)))) (based on Wife3)
 
@@ -2045,7 +2045,7 @@ class PlayState extends MusicBeatState
 				
 			totalNotesHit += wife;
 
-			if (noteDiff > Conductor.safeZoneOffset * 2)
+			if (noteDiff > Conductor.safeZoneOffset * 1.25)
 				{
 					daRating = 'shit';
 					ss = false;
@@ -2055,7 +2055,7 @@ class PlayState extends MusicBeatState
 					health -= 0.2;
 					shits++;
 				}
-				else if (noteDiff < Conductor.safeZoneOffset * -2)
+				else if (noteDiff < Conductor.safeZoneOffset * -1.25)
 				{
 					daRating = 'shit';
 					score = -300;

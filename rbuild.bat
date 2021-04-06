@@ -1,1 +1,1 @@
-lime test windows -release
+lime build windows -release

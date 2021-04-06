@@ -2022,9 +2022,9 @@ class PlayState extends MusicBeatState
 	var timeShown = 0;
 	var currentTimingShown:FlxText = null;
 
-	private function popUpScore(strumtime:Float):Void
+	private function popUpScore(daNote:Float):Void
 		{
-			var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
+			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 			var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
 			// boyfriend.playAnim('hey');
 			vocals.volume = 1;
@@ -2040,70 +2040,36 @@ class PlayState extends MusicBeatState
 	
 			var rating:FlxSprite = new FlxSprite();
 			var score:Float = 350;
-	
-			var daRating:String = "sick";
 				
 			totalNotesHit += wife;
 
-			if (noteDiff > Conductor.safeZoneOffset * 1.25)
-				{
-					daRating = 'shit';
-					ss = false;
-					score = -300;
-					combo = 0;
-					misses++;
-					health -= 0.2;
-					shits++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -1.25)
-				{
-					daRating = 'shit';
-					score = -300;
-					combo = 0;
-					misses++;
-					health -= 0.2;
-					ss = false;
-					shits++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -0.45)
-				{
-					daRating = 'bad';
-					score = -100;
-					health -= 0.03;
-					misses++;
-					combo = 0;
-					ss = false;
-					bads++;
-				}
-				else if (noteDiff > Conductor.safeZoneOffset * 0.45)
-				{
-					daRating = 'bad';
-					score = -100;
-					health -= 0.03;
-					combo = 0;
-					misses++;
-					ss = false;
-					bads++;
-				}
-				else if (noteDiff < Conductor.safeZoneOffset * -0.25)
-				{
-					daRating = 'good';
-					score = 200;
-					ss = false;
-					goods++;
-				}
-				else if (noteDiff > Conductor.safeZoneOffset * 0.35)
-				{
-					daRating = 'good';
-					score = 200;
-					ss = false;
-					goods++;
-				}
-			if (daRating == 'sick')
+			var daRating = daNote.rating;
+
+			switch(daRating)
 			{
-				if (health < 2)
-					health += 0.1;
-				sicks++;
+				case 'shit':
+					combo = 0;
+					misses++;
+					health -= 0.2;
+					ss = false;
+					shits++;
+				case 'bad';
+					daRating = 'bad';
+					score = -100;
+					health -= 0.03;
+					misses++;
+					combo = 0;
+					ss = false;
+					bads++;
+				case 'good':
+					daRating = 'good';
+					score = 200;
+					ss = false;
+					goods++;
+				case 'sick':
+					if (health < 2)
+						health += 0.1;
+					sicks++;
 			}
 			
 
@@ -2780,7 +2746,11 @@ class PlayState extends MusicBeatState
 					}
 					else
 					{
-						playerStrums.members[note.noteData].animation.play('static');
+						// silly kade kode !!!!!!
+						playerStrums.members[0].animation.play('static');
+						playerStrums.members[1].animation.play('static');
+						playerStrums.members[2].animation.play('static');
+						playerStrums.members[3].animation.play('static');
 						trace('mash ' + mashing);
 					}
 
@@ -2799,7 +2769,7 @@ class PlayState extends MusicBeatState
 				{
 					if (!note.isSustainNote)
 					{
-						popUpScore(note.strumTime);
+						popUpScore(note);
 						combo += 1;
 					}
 					else

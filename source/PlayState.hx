@@ -2053,7 +2053,7 @@ class PlayState extends MusicBeatState
 					health -= 0.2;
 					ss = false;
 					shits++;
-				case 'bad';
+				case 'bad':
 					daRating = 'bad';
 					score = -100;
 					health -= 0.03;

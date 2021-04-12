@@ -2283,6 +2283,29 @@ class PlayState extends MusicBeatState
 		return notes[0];
 	}
 
+	private function closerNote(note1:Note, note2:Note):Note
+	{
+		if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime))
+			return note1;
+		return note2;
+	}
+
+	private function hasDuplicateNoteData(notes:Array<Note>):Bool
+	{
+		for(i in 0...notes.length)
+		{
+			for(j in 0...notes.length)
+			{
+				if(i != j && notes[i].noteData == notes[j].noteData)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private function keyShit():Void
 	{
 		// HOLDING
@@ -2376,11 +2399,31 @@ class PlayState extends MusicBeatState
 						// the sorting probably doesn't need to be in here? who cares lol
 						possibleNotes.push(daNote);
 						possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-	
+						
+						while(hasDuplicateNoteData(possibleNotes))
+						{
+							for(i in 0...possibleNotes.length)
+							{
+								var doBreak:Bool = false;
+								for(j in 0...possibleNotes.length)
+								{
+									if(i != j && possibleNotes[i].noteData == possibleNotes[j].noteData)
+									{
+										if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i])
+											possibleNotes.remove(possibleNotes[j]);
+										else
+											possibleNotes.remove(possibleNotes[i]);
+										doBreak = true;
+									}
+									if(doBreak) break;
+								}
+								if(doBreak) break;
+							}
+						}
+
 						ignoreList.push(daNote.noteData);
 					}
 				});
-	
 				
 				if (possibleNotes.length > 0)
 				{
@@ -2417,18 +2460,12 @@ class PlayState extends MusicBeatState
 								}
 								else
 								{
-									if(closestNote != null)
-										noteCheck(controlArray, closestNote(possibleNotes));
-									else
-										noteCheck(controlArray, daNote);
+									noteCheck(controlArray, daNote);
 								}
 							}
 							else
 							{
-								if(closestNote != null)
-									noteCheck(controlArray, closestNote(possibleNotes));
-								else
-									noteCheck(controlArray, daNote);
+								noteCheck(controlArray, daNote);
 							}
 						}
 						else
@@ -2461,18 +2498,12 @@ class PlayState extends MusicBeatState
 							}
 							else
 							{
-								if(closestNote != null)
-									noteCheck(controlArray, closestNote(possibleNotes));
-								else
-									noteCheck(controlArray, daNote);
+								noteCheck(controlArray, daNote);
 							}
 						}
 						else
 						{
-							if(closestNote != null)
-								noteCheck(controlArray, closestNote(possibleNotes));
-							else
-								noteCheck(controlArray, daNote);
+							noteCheck(controlArray, daNote);
 						}
 					}
 					/* 

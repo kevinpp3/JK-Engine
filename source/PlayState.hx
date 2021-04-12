@@ -2271,6 +2271,18 @@ class PlayState extends MusicBeatState
 		var rightHold:Bool = false;
 		var leftHold:Bool = false;	
 
+	private function closestNote(notes:Array<Note>):Note
+	{
+		notes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+
+		for(note in notes)
+		{
+			if(Conductor.songPosition < note.strumTime)
+				return note;
+		}
+		return notes[0];
+	}
+
 	private function keyShit():Void
 	{
 		// HOLDING
@@ -2404,10 +2416,20 @@ class PlayState extends MusicBeatState
 									trace('force note hit');
 								}
 								else
-									noteCheck(controlArray, daNote);
+								{
+									if(closestNote != null)
+										noteCheck(controlArray, closestNote(possibleNotes));
+									else
+										noteCheck(controlArray, daNote);
+								}
 							}
 							else
-								noteCheck(controlArray, daNote);
+							{
+								if(closestNote != null)
+									noteCheck(controlArray, closestNote(possibleNotes));
+								else
+									noteCheck(controlArray, daNote);
+							}
 						}
 						else
 						{
@@ -2438,10 +2460,20 @@ class PlayState extends MusicBeatState
 								trace('force note hit');
 							}
 							else
-								noteCheck(controlArray, daNote);
+							{
+								if(closestNote != null)
+									noteCheck(controlArray, closestNote(possibleNotes));
+								else
+									noteCheck(controlArray, daNote);
+							}
 						}
 						else
-							noteCheck(controlArray, daNote);
+						{
+							if(closestNote != null)
+								noteCheck(controlArray, closestNote(possibleNotes));
+							else
+								noteCheck(controlArray, daNote);
+						}
 					}
 					/* 
 						if (controlArray[daNote.noteData])
@@ -2465,11 +2497,14 @@ class PlayState extends MusicBeatState
 									noteCheck(leftP, daNote);
 						}
 					 */
-					if (daNote.wasGoodHit)
+					for(note in possibleNotes)
 					{
-						daNote.kill();
-						notes.remove(daNote, true);
-						daNote.destroy();
+						if(note.wasGoodHit)
+						{
+							note.kill();
+							notes.remove(note, true);
+							note.destroy();
+						}
 					}
 				}
 			}

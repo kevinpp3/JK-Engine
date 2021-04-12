@@ -211,7 +211,7 @@ class Note extends FlxSprite
 				FlxG.watch.addQuick("Note" + this.ID, rating);
 			}
 
-			if(strumTime < Conductor.songPosition - (Conductor.safeZoneOffset * 0.80) && !wasGoodHit)
+			if(strumTime < Conductor.songPosition - (Conductor.safeZoneOffset * 1.0) && !wasGoodHit)
 			{
 				tooLate = true;
 				rating = "shit";

@@ -193,17 +193,17 @@ class Note extends FlxSprite
 
 			if(canBeHit)
 			{
-				if(noteDiff > Conductor.safeZoneOffset * 1.0)
+				if(noteDiff > Conductor.safeZoneOffset * 0.8)
 					rating = "shit";
-				else if(noteDiff < Conductor.safeZoneOffset * -1.0)
+				else if(noteDiff < Conductor.safeZoneOffset * -0.8)
 					rating = "shit";
-				else if(noteDiff > Conductor.safeZoneOffset * 0.75)
+				else if(noteDiff > Conductor.safeZoneOffset * 0.6)
 					rating = "bad";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.75)
+				else if(noteDiff < Conductor.safeZoneOffset * -0.6)
 					rating = "bad";
-				else if(noteDiff > Conductor.safeZoneOffset * 0.50)
+				else if(noteDiff > Conductor.safeZoneOffset * 0.25)
 					rating = "good";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.50)
+				else if(noteDiff < Conductor.safeZoneOffset * -0.25)
 					rating = "good";
 				else
 					rating = "sick";

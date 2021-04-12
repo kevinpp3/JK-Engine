@@ -2077,10 +2077,6 @@ class PlayState extends MusicBeatState
 				etternaModeScore += Math.round(score / wife);
 
 			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
-
-			if (daRating != 'shit' || daRating != 'bad')
-				{
-	
 	
 			songScore += Math.round(score);
 	
@@ -2262,7 +2258,7 @@ class PlayState extends MusicBeatState
 			});
 	
 			curSection += 1;
-			}
+			
 		}
 
 	public function NearlyEquals(value1:Float, value2:Float, unimportantDifference:Float = 10):Bool

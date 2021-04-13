@@ -2416,9 +2416,9 @@ class PlayState extends MusicBeatState
 								var doBreak:Bool = false;
 								for(j in 0...possibleNotes.length)
 								{
-									if(i != j && possibleNotes[i].noteData == possibleNotes[j].noteData)
+									if(i != j && possibleNotes[i].noteData == possibleNotes[j].noteData && !possibleNotes[i].isSustainNote && !possibleNotes[j].isSustainNote)
 									{
-										if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i] && !possibleNotes[j].isSustainNote)
+										if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i])
 											possibleNotes.remove(possibleNotes[j]);
 										else if(!possibleNotes[i].isSustainNote)
 											possibleNotes.remove(possibleNotes[i]);

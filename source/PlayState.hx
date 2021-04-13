@@ -2312,7 +2312,7 @@ class PlayState extends MusicBeatState
 		{
 			for(j in 0...notes.length)
 			{
-				if(i != j && notes[i].noteData == notes[j].noteData)
+				if(i != j && notes[i].noteData == notes[j].noteData && (!notes[i].isSustainNote && !notes[j].isSustainNote))
 				{
 					return true;
 				}
@@ -2425,9 +2425,9 @@ class PlayState extends MusicBeatState
 								{
 									if(i != j && possibleNotes[i].noteData == possibleNotes[j].noteData)
 									{
-										if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i])
+										if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i] && !possibleNotes[j].isSustainNote)
 											possibleNotes.remove(possibleNotes[j]);
-										else
+										else if(!possibleNotes[i].isSustainNote)
 											possibleNotes.remove(possibleNotes[i]);
 										doBreak = true;
 									}

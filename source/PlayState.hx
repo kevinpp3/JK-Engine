@@ -247,6 +247,8 @@ class PlayState extends MusicBeatState
 		{
 			case 'armageddon':
 				dialogue = ["Hey you're pretty cute.", 'Use the arrow keys to keep up \nwith me singing.'];
+			case 'the-big-black':
+				dialogue = ["Hey you're pretty cute.", 'Use the arrow keys to keep up \nwith me singing.'];
 			case 'bopeebo':
 				dialogue = [
 					'HEY!',
@@ -1009,7 +1011,7 @@ class PlayState extends MusicBeatState
 	{
 		inCutscene = false;
 
-		if(FlxG.save.data.showLeftArrows)
+		if(FlxG.save.data.showLeftArrows || PlayState.SONG.song == 'The-Big-Black')
 		{
 			generateStaticArrows(0);
 		}
@@ -1235,7 +1237,7 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, FlxG.save.data.centerArrows ? -223 : 50);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, (FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black') ? -223 : 50);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 
@@ -1248,7 +1250,7 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, FlxG.save.data.centerArrows ? -223 : 50);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, (FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black') ? -223 : 50);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 
@@ -1384,7 +1386,7 @@ class PlayState extends MusicBeatState
 
 			babyArrow.animation.play('static');
 			
-			if(FlxG.save.data.centerArrows)
+			if(FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black')
 				babyArrow.x -= 223;
 			else
 				babyArrow.x += 50;
@@ -1727,7 +1729,7 @@ class PlayState extends MusicBeatState
 				if (dad.curCharacter == 'mom')
 					vocals.volume = 1;
 
-				if (SONG.song.toLowerCase() == 'armageddon')
+				if (SONG.song.toLowerCase() == 'armageddon' || SONG.song.toLowerCase() == 'the-big-black')
 				{
 					tweenCamIn();
 				}
@@ -1853,7 +1855,7 @@ class PlayState extends MusicBeatState
 	
 					if (!daNote.mustPress && daNote.wasGoodHit)
 					{
-						if (SONG.song != 'Armageddon')
+						if (SONG.song != 'Armageddon' && SONG.song != 'The-Big-Black')
 							camZooming = true;
 	
 						var altAnim:String = "";
@@ -2095,7 +2097,7 @@ class PlayState extends MusicBeatState
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
 			rating.screenCenter();
 			rating.y -= 50;
-			if(FlxG.save.data.centerArrows)
+			if(FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black')
 				rating.x = coolText.x + 256;
 			else
 				rating.x = coolText.x - 256;
@@ -3053,7 +3055,7 @@ class PlayState extends MusicBeatState
 		{
 			boyfriend.playAnim('hey', true);
 
-			if (SONG.song == 'Armageddon' && dad.curCharacter == 'gf')
+			if ((SONG.song == 'Armageddon' || SONG.song == 'The-Big-Black') && dad.curCharacter == 'gf')
 			{
 				dad.playAnim('cheer', true);
 			}

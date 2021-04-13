@@ -18,8 +18,5 @@ class KadeEngineData
 
     if (FlxG.save.data.songPosition == null)
         FlxG.save.data.songPosition = false;
-
-	if (FlxG.save.data.etternaMode == null)
-            FlxG.save.data.etternaMode = false;
     }
 }

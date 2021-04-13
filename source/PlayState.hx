@@ -166,10 +166,7 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 
-		if (FlxG.save.data.etternaMode)
-			Conductor.safeFrames = 5; // 116ms hit window (j3-4)
-		else
-			Conductor.safeFrames = 10; // 166ms hit window (j1)
+		Conductor.safeFrames = 10; // 166ms hit window (j1)
 
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -809,7 +806,7 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 
 		// Add Kade Engine watermark
-		var kadeEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - KE " + MainMenuState.kadeEngineVer + " - " + (FlxG.save.data.etternaMode ? "E.Mode" : "FNF"), 16);
+		var kadeEngineWatermark = new FlxText(4,healthBarBG.y + 50,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - KE " + MainMenuState.kadeEngineVer + " - " + ("FNF"), 16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		add(kadeEngineWatermark);
@@ -1601,7 +1598,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.accuracyDisplay)
 		{
-			scoreTxt.text = "Score:" + (FlxG.save.data.etternaMode ? Math.max(0,etternaModeScore) + " (" + songScore + ")" : "" + songScore) + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "% | " + generateRanking();
+			scoreTxt.text = "Score:" + ("" + songScore) + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "% | " + generateRanking();
 		}
 		else
 		{
@@ -2027,7 +2024,7 @@ class PlayState extends MusicBeatState
 	private function popUpScore(daNote:Note):Void
 		{
 			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
-			var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
+			var wife:Float = EtternaFunctions.wife3(noteDiff, 1.7);
 			// boyfriend.playAnim('hey');
 			vocals.volume = 1;
 	
@@ -2073,10 +2070,6 @@ class PlayState extends MusicBeatState
 						health += 0.1;
 					sicks++;
 			}
-			
-
-			if (FlxG.save.data.etternaMode)
-				etternaModeScore += Math.round(score / wife);
 
 			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
 	
@@ -2715,7 +2708,7 @@ class PlayState extends MusicBeatState
 			misses++;
 
 			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
-			var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
+			var wife:Float = EtternaFunctions.wife3(noteDiff, 1.7);
 
 			totalNotesHit += wife;
 
@@ -2791,8 +2784,6 @@ class PlayState extends MusicBeatState
 	
 	var mashing:Int = 0;
 	var mashViolations:Int = 0;
-
-	var etternaModeScore:Int = 0;
 
 	function noteCheck(controlArray:Array<Bool>, note:Note):Void // sorry lol
 		{

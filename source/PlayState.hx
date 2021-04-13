@@ -2020,8 +2020,10 @@ class PlayState extends MusicBeatState
 	var endingSong:Bool = false;
 
 	var timeShown = 0;
-	var currentTimingShown:FlxText = null;
 
+	#if debug
+	var currentTimingShown:FlxText = null;
+	#end
 	private function popUpScore(daNote:Note):Void
 		{
 			var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
@@ -2108,9 +2110,8 @@ class PlayState extends MusicBeatState
 			rating.velocity.y -= FlxG.random.int(140, 175);
 			rating.velocity.x -= FlxG.random.int(0, 10);
 	
-			
+			#if debug
 			var msTiming = truncateFloat(noteDiff, 3);
-
 			if (currentTimingShown != null)
 				remove(currentTimingShown);
 
@@ -2135,7 +2136,7 @@ class PlayState extends MusicBeatState
 				currentTimingShown.alpha = 1;
 
 			add(currentTimingShown);
-			
+			#end
 			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'combo' + pixelShitPart2));
 			comboSpr.screenCenter();
 			comboSpr.x = rating.x;
@@ -2143,14 +2144,20 @@ class PlayState extends MusicBeatState
 			comboSpr.acceleration.y = 600;
 			comboSpr.velocity.y -= 150;
 
+			#if debug
 			currentTimingShown.screenCenter();
 			currentTimingShown.x = comboSpr.x + 100;
 			currentTimingShown.y = rating.y + 100;
 			currentTimingShown.acceleration.y = 600;
 			currentTimingShown.velocity.y -= 150;
-	
+			#end
+
 			comboSpr.velocity.x += FlxG.random.int(1, 10);
+
+			#if debug
 			currentTimingShown.velocity.x += comboSpr.velocity.x;
+			#end
+
 			add(rating);
 	
 			if (!curStage.startsWith('school'))
@@ -2166,11 +2173,16 @@ class PlayState extends MusicBeatState
 				comboSpr.setGraphicSize(Std.int(comboSpr.width * daPixelZoom * 0.7));
 			}
 	
+			#if debug
 			currentTimingShown.updateHitbox();
+			#end
+
 			comboSpr.updateHitbox();
 			rating.updateHitbox();
 	
+			#if debug
 			currentTimingShown.cameras = [camHUD];
+			#end
 			comboSpr.cameras = [camHUD];
 			rating.cameras = [camHUD];
 
@@ -2236,8 +2248,10 @@ class PlayState extends MusicBeatState
 				startDelay: Conductor.crochet * 0.001,
 				onUpdate: function(tween:FlxTween)
 				{
+					#if debug
 					if (currentTimingShown != null)
 						currentTimingShown.alpha -= 0.02;
+					#end
 					timeShown++;
 				}
 			});
@@ -2247,11 +2261,13 @@ class PlayState extends MusicBeatState
 				{
 					coolText.destroy();
 					comboSpr.destroy();
+					#if debug
 					if (currentTimingShown != null && timeShown >= 20)
 					{
 						remove(currentTimingShown);
 						currentTimingShown = null;
 					}
+					#end
 					rating.destroy();
 				},
 				startDelay: Conductor.crochet * 0.001

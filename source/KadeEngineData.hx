@@ -24,6 +24,5 @@ class KadeEngineData
     
 	if (FlxG.save.data.centerArrows == null)
         FlxG.save.data.centerArrows = false;
-
 	}
 }

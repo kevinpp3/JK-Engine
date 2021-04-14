@@ -293,33 +293,7 @@ class TitleState extends MusicBeatState
 
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-
-				// Get current version of Kade Engine
-
-				var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
-
-				http.onData = function (data:String) {
-				  
-				  	if (!MainMenuState.kadeEngineVer.contains(data.trim()) && !OutdatedSubState.leftState)
-					{
-						trace('outdated lmao! ' + data.trim() + ' != ' + MainMenuState.kadeEngineVer);
-						OutdatedSubState.needVer = data;
-						//FlxG.switchState(new OutdatedSubState());
-						FlxG.switchState(new MainMenuState());
-					}
-					else
-					{
-						FlxG.switchState(new MainMenuState());
-					}
-				}
-				
-				http.onError = function (error) {
-				  trace('error: $error');
-				  FlxG.switchState(new MainMenuState()); // fail but we go anyway
-				}
-				
-				http.request();
-
+				FlxG.switchState(new MainMenuState());
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
@@ -391,18 +365,20 @@ class TitleState extends MusicBeatState
 			// credTextShit.text = 'In association \nwith';
 			// credTextShit.screenCenter();
 			case 5:
-				createCoolText(['Kade Engine', 'by']);
+				createCoolText(['Kaiz Engine', 'by']);
 			case 7:
-				addMoreText('KadeDeveloper');
-			// credTextShit.text += '\nNewgrounds';
+				addMoreText('kEvin and Jay');
 			case 8:
+				addMoreText('based on the Kade Engine');
+			// credTextShit.text += '\nNewgrounds';
+			case 9:
 				deleteCoolText();
 				ngSpr.visible = false;
 			// credTextShit.visible = false;
 
 			// credTextShit.text = 'Shoutouts Tom Fulp';
 			// credTextShit.screenCenter();
-			case 9:
+			case 10:
 				createCoolText([curWacky[0]]);
 			// credTextShit.visible = true;
 			case 11:
@@ -414,14 +390,13 @@ class TitleState extends MusicBeatState
 			// credTextShit.text = "Friday";
 			// credTextShit.screenCenter();
 			case 13:
-				addMoreText('Friday');
+				addMoreText('JayPack:');
 			// credTextShit.visible = true;
 			case 14:
-				addMoreText('Night');
+				addMoreText('A collection of');
 			// credTextShit.text += '\nNight';
 			case 15:
-				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
-
+				addMoreText('some pretty cool songs');
 			case 16:
 				skipIntro();
 		}

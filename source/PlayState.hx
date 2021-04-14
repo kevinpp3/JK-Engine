@@ -2025,13 +2025,14 @@ class PlayState extends MusicBeatState
 				case 'shit':
 					combo = 0;
 					misses++;
-					health -= 0.2;
+					score = -200;
+					health -= 0.3;
 					ss = false;
 					shits++;
 				case 'bad':
 					daRating = 'bad';
 					score = -100;
-					health -= 0.03;
+					health -= 0.2;
 					misses++;
 					combo = 0;
 					ss = false;
@@ -2039,11 +2040,13 @@ class PlayState extends MusicBeatState
 				case 'good':
 					daRating = 'good';
 					score = 200;
+					health += 0.05;
 					ss = false;
 					goods++;
 				case 'sick':
 					if (health < 2)
 						health += 0.1;
+					score = 350;
 					sicks++;
 			}
 
@@ -2519,7 +2522,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			health -= 0.04;
+			health -= 0.4;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
@@ -2532,7 +2535,7 @@ class PlayState extends MusicBeatState
 
 			totalNotesHit += wife;
 
-			songScore -= 10;
+			songScore -= -350;
 
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);

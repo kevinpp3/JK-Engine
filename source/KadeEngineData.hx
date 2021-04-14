@@ -18,5 +18,12 @@ class KadeEngineData
 
     if (FlxG.save.data.songPosition == null)
         FlxG.save.data.songPosition = false;
-    }
+    
+	if (FlxG.save.data.showLeftArrows == null)
+        FlxG.save.data.showLeftArrows = true;
+    
+	if (FlxG.save.data.centerArrows == null)
+        FlxG.save.data.centerArrows = false;
+
+	}
 }

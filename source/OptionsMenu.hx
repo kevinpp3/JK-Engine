@@ -32,7 +32,7 @@ class OptionsMenu extends MusicBeatState
 			"\nSong Position " + (!FlxG.save.data.songPosition ? "off" : "on") +
 			"\nShow Left Arrows " + (!FlxG.save.data.showLeftArrows ? "off" : "on") +
 			"\nCenter Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on") +
-			"\nLoad replays");
+			"\nFuck You");
 		
 		trace(controlsStrings);
 
@@ -136,8 +136,10 @@ class OptionsMenu extends MusicBeatState
 						ctrl.targetY = curSelected - 5;
 						grpControls.add(ctrl);
 					case 6:
-						trace('switch');
-						FlxG.switchState(new LoadReplayState());
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fuck You ", true, false);
+						ctrl.isMenuItem = true;
+						ctrl.targetY = curSelected - 6;
+						grpControls.add(ctrl);
 				}
 			}
 		FlxG.save.flush();

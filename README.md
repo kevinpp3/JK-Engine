@@ -1,5 +1,11 @@
 This mod is a collection of songs chosen and charted by Jay, with some changes to the input system I added to make the game's input system closer to that of OpenITG.
 
+Here are some YouTube links to see my (admittedly imperfect) playthroughs of the songs included in this mod:
+
+- [Armageddon](https://youtu.be/6Y3yvVQFYfI)
+
+- [The Big Black](https://youtu.be/10iaKnmIwKo)
+
 **HUGE NOTICE**
 
 This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION**. This will probably never be official, so don't get confused.

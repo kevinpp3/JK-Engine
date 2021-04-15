@@ -105,7 +105,7 @@ class PlayState extends MusicBeatState
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
 
-
+	private var maxHealth:Float = 2;
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
 	private var songPositionBar:Float = 0;
@@ -2016,13 +2016,13 @@ class PlayState extends MusicBeatState
 					combo = 0;
 					misses++;
 					score = -200;
-					health -= 0.3;
+					health -= maxHealth * 0.05;
 					ss = false;
 					shits++;
 				case 'bad':
 					daRating = 'bad';
 					score = -100;
-					health -= 0.2;
+					health -= maxHealth * 0.025;
 					misses++;
 					combo = 0;
 					ss = false;
@@ -2030,12 +2030,12 @@ class PlayState extends MusicBeatState
 				case 'good':
 					daRating = 'good';
 					score = 200;
-					health += 0.05;
+					health += maxHealth * 0.025;
 					ss = false;
 					goods++;
 				case 'sick':
 					if (health < 2)
-						health += 0.1;
+						health += maxHealth * 0.05;
 					score = 350;
 					sicks++;
 			}
@@ -2512,7 +2512,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned)
 		{
-			health -= 0.4;
+			health -= maxHealth * 0.075;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');

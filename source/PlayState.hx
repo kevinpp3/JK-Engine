@@ -2783,7 +2783,7 @@ class PlayState extends MusicBeatState
 			boyfriend.playAnim('idle');
 		}
 
-		if (curBeat % 8 == 7 && curSong == 'Bopeebo')
+		/*if (curBeat % 8 == 7 && curSong == 'Bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
 
@@ -2791,7 +2791,7 @@ class PlayState extends MusicBeatState
 			{
 				dad.playAnim('cheer', true);
 			}
-		}
+		}*/
 
 		switch (curStage)
 		{
@@ -2851,6 +2851,8 @@ class PlayState extends MusicBeatState
 		case "the-big-black":
 			return true;
 		case "printer-jam":
+			return true;
+		case "everything-will-freeze":
 			return true;
 		}
 		return false;

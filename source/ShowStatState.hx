@@ -56,7 +56,7 @@ class ShowStatState extends MusicBeatState
                 songName += initSongName.charAt(i);
         }
 
-        initStatTxt = "Rank:   " + rank + "\n" + songName + " " + songDifficulty + "\nScore:    " + score + "\nAccuracy: " + truncateFloat(accuracy, 2) + "\nSicks:    " + sicks + "\nGoods:    " + goods + "\nBads:     " + bads + "\nShits:    " + shits + "\nMisses:   " + misses;
+        initStatTxt = "Rank:   " + rank + "\n" + songName + " " + songDifficulty + "\nScore:    " + score + "\nAccuracy: " + truncateFloat(accuracy, 2) + "%\nSicks:    " + sicks + "\nGoods:    " + goods + "\nBads:     " + bads + "\nShits:    " + shits + "\nMisses:   " + misses;
     }
 
 	override public function create():Void

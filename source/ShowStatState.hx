@@ -56,7 +56,7 @@ class ShowStatState extends MusicBeatState
                 songName += initSongName.charAt(i);
         }
 
-        initStatTxt = "Rank: " + rank + "\n" + songName + "\nDifficulty: " + songDifficulty + "\nScore:  " + score + "\nSicks:  " + sicks + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses;
+        initStatTxt = "Rank: " + rank + "\n" + songName + "\nDifficulty: " + songDifficulty + "\nScore:  " + score + "\nAccuracy" + truncateFloat(accuracy, 2) + "\nSicks:  " + sicks + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses;
     }
 
 	override public function create():Void
@@ -127,6 +127,14 @@ class ShowStatState extends MusicBeatState
 		}
 
 		super.update(elapsed);
+	}
+
+	function truncateFloat( number : Float, precision : Int): Float 
+	{
+		var num = number;
+		num = num * Math.pow(10, precision);
+		num = Math.round( num ) / Math.pow(10, precision);
+		return num;
 	}
 
 }

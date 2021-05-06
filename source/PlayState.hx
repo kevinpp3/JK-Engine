@@ -144,6 +144,7 @@ class PlayState extends MusicBeatState
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
+	var hitTxt:FlxText;
 	
 	public static var campaignScore:Int = 0;
 
@@ -802,12 +803,17 @@ class PlayState extends MusicBeatState
 		// healthBar
 		add(healthBar);
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
+		scoreTxt = new FlxText(FlxG.width / 2 - 179, healthBarBG.y + 50, 0, "", 20);
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.x = healthBarBG.x + healthBarBG.width / 2;
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
+
+		hitTxt = new FlxText(0, healthBarBG.y - 8, 0, "", 30);
+		hitTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		hitTxt.scrollFactor.set();
+		add(hitTxt);
 
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
@@ -1572,12 +1578,15 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.save.data.accuracyDisplay)
 		{
-			scoreTxt.text = "Score:" + ("" + songScore) + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "% | " + generateRanking();
+			scoreTxt.text = "Score:" + ("" + songScore) + " | Accuracy:" + truncateFloat(accuracy, 2) + "% | " + generateRanking();
 		}
 		else
 		{
 			scoreTxt.text = "Score:" + songScore;
 		}
+
+		hitTxt.text = "Sicks:  " + sicks + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses;
+
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
 			persistentUpdate = false;
@@ -1909,74 +1918,11 @@ class PlayState extends MusicBeatState
 			Highscore.saveScore(SONG.song, Math.round(songScore), storyDifficulty);
 			#end
 		}
-/*
-		if (isStoryMode)
-		{
-			campaignScore += Math.round(songScore);
 
-			storyPlaylist.remove(storyPlaylist[0]);
+		// Add code to show you your various hits until you press ENTER
 
-			if (storyPlaylist.length <= 0)
-			{
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
-
-				transIn = FlxTransitionableState.defaultTransIn;
-				transOut = FlxTransitionableState.defaultTransOut;
-
-				FlxG.switchState(new StoryMenuState());
-
-				// if ()
-				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
-
-				if (SONG.validScore)
-				{
-					NGio.unlockMedal(60961);
-					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
-				}
-
-				FlxG.save.data.weekUnlocked = StoryMenuState.weekUnlocked;
-				FlxG.save.flush();
-			}
-			else
-			{
-				var difficulty:String = "";
-
-				if (storyDifficulty == 0)
-					difficulty = '-easy';
-
-				if (storyDifficulty == 2)
-					difficulty = '-hard';
-
-				trace('LOADING NEXT SONG');
-				trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
-
-				if (SONG.song.toLowerCase() == 'eggnog')
-				{
-					var blackShit:FlxSprite = new FlxSprite(-FlxG.width * FlxG.camera.zoom,
-						-FlxG.height * FlxG.camera.zoom).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-					blackShit.scrollFactor.set();
-					add(blackShit);
-					camHUD.visible = false;
-
-					FlxG.sound.play(Paths.sound('Lights_Shut_off'));
-				}
-
-				FlxTransitionableState.skipNextTransIn = true;
-				FlxTransitionableState.skipNextTransOut = true;
-				prevCamFollow = camFollow;
-
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
-				FlxG.sound.music.stop();
-
-				LoadingState.loadAndSwitchState(new PlayState());
-			}
-		}
-*/
-//		else
-//		{
-			trace('WENT BACK TO FREEPLAY??');
-			FlxG.switchState(new FreeplayState());
-//		}
+		trace('WENT BACK TO FREEPLAY??');
+		FlxG.switchState(new FreeplayState());
 	}
 
 	var endingSong:Bool = false;

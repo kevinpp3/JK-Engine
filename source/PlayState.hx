@@ -241,9 +241,8 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.song.toLowerCase())
 		{
-			case 'armageddon':
+			default:
 				dialogue = ["Hey you're pretty cute.", 'Use the arrow keys to keep up \nwith me singing.'];
-			case 'the-big-black':
 				dialogue = ["Hey you're pretty cute.", 'Use the arrow keys to keep up \nwith me singing.'];
 			case 'bopeebo':
 				dialogue = [
@@ -984,7 +983,7 @@ class PlayState extends MusicBeatState
 	{
 		inCutscene = false;
 
-		if(FlxG.save.data.showLeftArrows || PlayState.SONG.song == 'The-Big-Black')
+		if(FlxG.save.data.showLeftArrows || gfPlays(PlayState.SONG.song))
 		{
 			generateStaticArrows(0);
 		}
@@ -1210,7 +1209,7 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, (FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black') ? -223 : 50);
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, (FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song)) ? -223 : 50);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
 
@@ -1223,7 +1222,7 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, (FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black') ? -223 : 50);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, (FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song)) ? -223 : 50);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 
@@ -1359,7 +1358,7 @@ class PlayState extends MusicBeatState
 
 			babyArrow.animation.play('static');
 			
-			if(FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black')
+			if(FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song))
 				babyArrow.x -= 223;
 			else
 				babyArrow.x += 50;
@@ -1822,8 +1821,8 @@ class PlayState extends MusicBeatState
 	
 					if (!daNote.mustPress && daNote.wasGoodHit)
 					{
-						if (SONG.song != 'Armageddon' && SONG.song != 'The-Big-Black')
-							camZooming = true;
+						//if (SONG.song != 'Armageddon' && SONG.song != 'The-Big-Black')
+						//	camZooming = true;
 	
 						var altAnim:String = "";
 	
@@ -2064,7 +2063,7 @@ class PlayState extends MusicBeatState
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
 			rating.screenCenter();
 			rating.y -= 50;
-			if(FlxG.save.data.centerArrows && PlayState.SONG.song != 'The-Big-Black')
+			if(FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song))
 				rating.x = coolText.x + 256;
 			else
 				rating.x = coolText.x - 256;
@@ -2853,7 +2852,7 @@ class PlayState extends MusicBeatState
 		{
 			boyfriend.playAnim('hey', true);
 
-			if ((SONG.song == 'Armageddon' || SONG.song == 'The-Big-Black') && dad.curCharacter == 'gf')
+			if ((SONG.song == 'Armageddon' || SONG.song == 'The-Big-Black' || SONG.song == 'Printer-Jam') && dad.curCharacter == 'gf')
 			{
 				dad.playAnim('cheer', true);
 			}
@@ -2905,6 +2904,21 @@ class PlayState extends MusicBeatState
 		{
 			lightningStrikeShit();
 		}
+	}
+
+	function gfPlays(song:String):Bool
+	{
+		song = song.toLowerCase();
+		switch(song)
+		{
+		default:
+			return false;
+		case "the-big-black":
+			return true;
+		case "printer-jam":
+			return true;
+		}
+		return false;
 	}
 
 	var curLight:Int = 0;

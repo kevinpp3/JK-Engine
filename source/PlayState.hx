@@ -2013,7 +2013,6 @@ class PlayState extends MusicBeatState
 			{
 				case 'shit':
 					combo = 0;
-					misses++;
 					score = -200;
 					health -= maxHealth * 0.05;
 					ss = false;
@@ -2022,7 +2021,6 @@ class PlayState extends MusicBeatState
 					daRating = 'bad';
 					score = -100;
 					health -= maxHealth * 0.025;
-					misses++;
 					combo = 0;
 					ss = false;
 					bads++;

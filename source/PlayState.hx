@@ -54,7 +54,6 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 	public static var weekSong:Int = 0;
-	public static var mines:Int = 0;
 	public static var shits:Int = 0;
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
@@ -1973,10 +1972,6 @@ class PlayState extends MusicBeatState
 						health += maxHealth * 0.05;
 					score = 350;
 					sicks++;
-				case 'bomb':
-					health -= maxHealth * 0.05;;
-					score = -350;
-					mines++;
 			}
 
 			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
@@ -2213,7 +2208,7 @@ class PlayState extends MusicBeatState
 		{
 			for(j in 0...notes.length)
 			{
-				if(i != j && notes[i].noteData == notes[j].noteData && notes[i].noteType == notes[j].noteType && (!notes[i].isSustainNote && !notes[j].isSustainNote))
+				if(i != j && notes[i].noteData == notes[j].noteData && (!notes[i].isSustainNote && !notes[j].isSustainNote))
 				{
 					return true;
 				}
@@ -2569,9 +2564,8 @@ class PlayState extends MusicBeatState
 		}
 
 		function goodNoteHit(note:Note, resetMashViolation = true):Void
-		{
-			if(note.noteType == 0)
 			{
+
 				if (resetMashViolation)
 					mashViolations--;
 
@@ -2584,7 +2578,7 @@ class PlayState extends MusicBeatState
 					}
 					else
 						totalNotesHit += 1;
-
+	
 
 					switch (note.noteData)
 					{
@@ -2616,50 +2610,6 @@ class PlayState extends MusicBeatState
 					updateAccuracy();
 				}
 			}
-			else
-			{
-				if (!note.wasGoodHit)
-				{
-					if (!note.isSustainNote)
-					{
-						popUpScore(note);
-						combo += 1;
-					}
-					else
-						totalNotesHit += 1;
-
-
-					switch (note.noteData)
-					{
-						case 2:
-							boyfriend.playAnim('singUPmiss', true);
-						case 3:
-							boyfriend.playAnim('singRIGHTmiss', true);
-						case 1:
-							boyfriend.playAnim('singDOWNmiss', true);
-						case 0:
-							boyfriend.playAnim('singLEFTmiss', true);
-					}
-		
-					playerStrums.forEach(function(spr:FlxSprite)
-					{
-						if (Math.abs(note.noteData) == spr.ID)
-						{
-							spr.animation.play('confirm', true);
-						}
-					});
-		
-					note.wasGoodHit = true;
-					vocals.volume = 1;
-		
-					note.kill();
-					notes.remove(note, true);
-					note.destroy();
-					
-					updateAccuracy();
-				}
-			}
-		}
 		
 
 	var fastCarCanDrive:Bool = true;

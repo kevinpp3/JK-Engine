@@ -44,7 +44,7 @@ class ShowStatState extends MusicBeatState
 
     var statTxt:FlxText;
 
-    public function new(sicks:Int, goods:Int, bads:Int, shits:Int, misses:Int, score:Int, accuracy:Float, initSongName:String, songDifficulty:String, rank:String)
+    public function new(sicks:Int, goods:Int, bads:Int, shits:Int, misses:Int, bombs:Int, score:Int, accuracy:Float, initSongName:String, songDifficulty:String, rank:String)
     {
         super();
 
@@ -56,7 +56,7 @@ class ShowStatState extends MusicBeatState
                 songName += initSongName.charAt(i);
         }
 
-        initStatTxt = "Rank:   " + rank + "\n" + songName + " " + songDifficulty + "\nScore:    " + score + "\nAccuracy: " + truncateFloat(accuracy, 2) + "%\nSicks:    " + sicks + "\nGoods:    " + goods + "\nBads:     " + bads + "\nShits:    " + shits + "\nMisses:   " + misses;
+        initStatTxt = "Rank:   " + rank + "\n" + songName + " " + songDifficulty + "\nScore:    " + score + "\nAccuracy: " + truncateFloat(accuracy, 2) + "%\nSicks:    " + sicks + "\nGoods:    " + goods + "\nBads:     " + bads + "\nShits:    " + shits + "\nMisses:   " + misses + "\nBombs:    " + bombs;
     }
 
 	override public function create():Void

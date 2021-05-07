@@ -54,7 +54,7 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 	public static var weekSong:Int = 0;
-	public static var mines:Int = 0;
+	public static var bombs:Int = 0;
 	public static var shits:Int = 0;
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
@@ -175,6 +175,7 @@ class PlayState extends MusicBeatState
 		goods = 0;
 
 		misses = 0;
+		bombs = 0;
 
 		repPresses = 0;
 		repReleases = 0;
@@ -810,7 +811,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
-		hitTxt = new FlxText(0, healthBarBG.y - 8, 0, "", 16);
+		hitTxt = new FlxText(0, healthBarBG.y - 20, 0, "", 16);
 		hitTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		hitTxt.scrollFactor.set();
 		add(hitTxt);
@@ -1548,7 +1549,7 @@ class PlayState extends MusicBeatState
 
 		#if debug
 		if(FlxG.keys.justPressed.SIX)
-			FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, songScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
+			FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, bombs, songScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
 		#end
 
 		if (FlxG.keys.justPressed.NINE)
@@ -1586,7 +1587,7 @@ class PlayState extends MusicBeatState
 			scoreTxt.text = "Score:" + songScore;
 		}
 
-		hitTxt.text = "Sicks:  " + sicks + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses;
+		hitTxt.text = "Sicks:  " + sicks + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses + "\nBombs:  " + bombs;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -1913,7 +1914,7 @@ class PlayState extends MusicBeatState
 
 		// show you your various hits until you press ENTER
 		trace('WENT BACK TO FREEPLAY??');
-		FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, songScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
+		FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, bombs, songScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
 	}
 
 	var endingSong:Bool = false;
@@ -1976,9 +1977,10 @@ class PlayState extends MusicBeatState
 					score = 350;
 					sicks++;
 				case 'boom':
+					daRating = 'boom';
 					health -= maxHealth * 0.075;
 					score = -350;
-					mines++;
+					bombs++;
 			}
 
 			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
@@ -2001,18 +2003,28 @@ class PlayState extends MusicBeatState
 				pixelShitPart1 = 'weeb/pixelUI/';
 				pixelShitPart2 = '-pixel';
 			}
-	
-			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
-			rating.screenCenter();
-			rating.y -= 50;
-			if(FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song))
-				rating.x = coolText.x + 256;
+
+			if(daRating == 'boom')
+			{
+				rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
+				rating.screenCenter();
+				rating.x = daNote.x;
+				rating.y = strumLine.y;
+			}
 			else
-				rating.x = coolText.x - 256;
-			rating.acceleration.y = 550;
-			rating.velocity.y -= FlxG.random.int(140, 175);
-			rating.velocity.x -= FlxG.random.int(0, 10);
-	
+			{
+				rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
+				rating.screenCenter();
+				rating.y -= 50;
+				if(FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song))
+					rating.x = coolText.x + 256;
+				else
+					rating.x = coolText.x - 256;
+				rating.acceleration.y = 550;
+				rating.velocity.y -= FlxG.random.int(140, 175);
+				rating.velocity.x -= FlxG.random.int(0, 10);
+			}
+
 			#if debug
 			var msTiming = truncateFloat(noteDiff, 3);
 			if (currentTimingShown != null)

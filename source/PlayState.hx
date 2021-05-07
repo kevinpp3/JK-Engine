@@ -145,6 +145,11 @@ class PlayState extends MusicBeatState
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
+	var printerCode:FourthWall;
+	var blackBG:FlxSprite;
+	var printerAssetsNotLoaded:Bool = true;
+	private var camPrinter:FlxCamera;
+
 	var hitTxt:FlxText;
 	
 	public static var campaignScore:Int = 0;
@@ -1096,6 +1101,7 @@ class PlayState extends MusicBeatState
 					});
 					FlxG.sound.play(Paths.sound('introGo' + altSuffix), 0.6);
 				case 4:
+					printerCode.getSilly();
 			}
 
 			swagCounter += 1;
@@ -1898,6 +1904,37 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
+
+		if(SONG.song.toLowerCase() == 'printer-jam')
+		{
+			if(printerAssetsNotLoaded)
+			{
+				trace('loading printer assets');
+				camPrinter = new FlxCamera(0, 0, 1280, 720, 1);
+				camPrinter.alpha = 0;
+				camPrinter.visible = true;
+
+				blackBG = new FlxSprite(0, 0);
+				blackBG.loadGraphic(Paths.image('printer-black'));
+				blackBG.setGraphicSize(1280, 720);
+				blackBG.scrollFactor.set();
+				blackBG.cameras = [camPrinter];
+
+				printerCode = new FourthWall();
+				printerCode.sprite.setGraphicSize(1280);
+				printerCode.sprite.cameras = [camPrinter];
+				printerCode.sprite.y = 0;
+
+				add(blackBG);
+				add(printerCode.sprite);
+
+				printerAssetsNotLoaded = false;
+			}
+			else
+			{
+				printerCode.update(elapsed);
+			}
+		}
 	}
 
 	function endSong():Void

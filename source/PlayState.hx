@@ -811,7 +811,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
-		hitTxt = new FlxText(0, healthBarBG.y - 20, 0, "", 16);
+		hitTxt = new FlxText(0, healthBarBG.y - 22, 0, "", 16);
 		hitTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		hitTxt.scrollFactor.set();
 		add(hitTxt);
@@ -2010,6 +2010,7 @@ class PlayState extends MusicBeatState
 				rating.screenCenter();
 				rating.x = daNote.x;
 				rating.y = strumLine.y;
+				FlxG.sound.play(Paths.sound('boom'));
 			}
 			else
 			{
@@ -2216,6 +2217,11 @@ class PlayState extends MusicBeatState
 
 	private function closerNote(note1:Note, note2:Note):Note
 	{
+		if(note1.canBeHit && !note2.canBeHit)
+			return note1;
+		if(!note1.canBeHit && note2.canBeHit)
+			return note2;
+
 		if(note1.noteType == 0)
 		{
 			if(note2.noteType == 0)
@@ -2225,11 +2231,11 @@ class PlayState extends MusicBeatState
 			}
 			if(note2.noteType == 1)
 			{
-				var noteDiff:Float = Math.abs(note2.strumTime - Conductor.songPosition);
+				var noteDiff:Float = Math.abs(note1.strumTime - Conductor.songPosition);
 
-				if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime) 
-					&& noteDiff > Conductor.safeZoneOffset * 0.25
-					&& noteDiff < Conductor.safeZoneOffset * -0.25)
+				if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime)
+					&& noteDiff > Conductor.safeZoneOffset * -0.8
+					&& noteDiff < Conductor.safeZoneOffset * 0.8)
 					return note1;
 			}
 		}

@@ -54,6 +54,7 @@ class PlayState extends MusicBeatState
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
 	public static var weekSong:Int = 0;
+	public static var mines:Int = 0;
 	public static var shits:Int = 0;
 	public static var bads:Int = 0;
 	public static var goods:Int = 0;
@@ -1217,6 +1218,7 @@ class PlayState extends MusicBeatState
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, (FlxG.save.data.centerArrows && !gfPlays(PlayState.SONG.song)) ? -223 : 50);
 				swagNote.sustainLength = songNotes[2];
+				swagNote.noteType = songNotes[3];
 				swagNote.scrollFactor.set(0, 0);
 
 				var susLength:Float = swagNote.sustainLength;
@@ -1873,7 +1875,6 @@ class PlayState extends MusicBeatState
 						}
 						else
 						{
-							health -= 0.075;
 							vocals.volume = 0;
 							noteMiss(daNote.noteData, daNote);
 						}
@@ -1941,8 +1942,11 @@ class PlayState extends MusicBeatState
 	
 			var rating:FlxSprite = new FlxSprite();
 			var score:Float = 350;
-				
-			totalNotesHit += wife;
+			
+			if(daNote.noteType != 1)
+				totalNotesHit += wife;
+			else
+				updateAccuracy();
 
 			var daRating = daNote.rating;
 
@@ -1972,6 +1976,10 @@ class PlayState extends MusicBeatState
 						health += maxHealth * 0.05;
 					score = 350;
 					sicks++;
+				case 'boom':
+					health -= maxHealth * 0.075;
+					score = -350;
+					mines++;
 			}
 
 			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
@@ -2197,8 +2205,23 @@ class PlayState extends MusicBeatState
 
 	private function closerNote(note1:Note, note2:Note):Note
 	{
-		if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime))
-			return note1;
+		if(note1.noteType == 0)
+		{
+			if(note2.noteType == 0)
+			{
+				if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime))
+					return note1;
+			}
+			if(note2.noteType == 1)
+			{
+				var noteDiff:Float = Math.abs(note2.strumTime - Conductor.songPosition);
+
+				if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime) 
+					&& noteDiff > Conductor.safeZoneOffset * 0.25
+					&& noteDiff < Conductor.safeZoneOffset * -0.25)
+					return note1;
+			}
+		}
 		return note2;
 	}
 
@@ -2444,7 +2467,7 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{
-		if (!boyfriend.stunned)
+		if (!boyfriend.stunned && daNote.noteType != 1)
 		{
 			health -= maxHealth * 0.075;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -2508,7 +2531,7 @@ class PlayState extends MusicBeatState
 			else
 				fc = true;
 			totalPlayed += 1;
-			accuracy = Math.max(0,totalNotesHit / totalPlayed * 100);
+			accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
 		}
 
 

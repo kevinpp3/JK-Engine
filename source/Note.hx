@@ -17,6 +17,7 @@ class Note extends FlxSprite
 
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
+	public var noteType:Int = 0; // Is it normal or is it a bomb???
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
@@ -182,32 +183,39 @@ class Note extends FlxSprite
 
 		if (mustPress)
 		{
-			// The * 0.5 is so that it's easier to hit them too late, instead of too early 
+			var noteDiff:Float = Math.abs(strumTime - Conductor.songPosition);
+
 			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-				&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset)
+				&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset && noteType == 0)
+				canBeHit = true;
+			else if(noteDiff < Conductor.safeZoneOffset * 0.25
+				&& noteDiff > Conductor.safeZoneOffset * -0.25 && noteType == 1)
 				canBeHit = true;
 			else
 				canBeHit = false;
 
-			var noteDiff:Float = Math.abs(strumTime - Conductor.songPosition);
-
 			if(canBeHit)
 			{
-				if(noteDiff > Conductor.safeZoneOffset * 0.8)
-					rating = "shit";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.8)
-					rating = "shit";
-				else if(noteDiff > Conductor.safeZoneOffset * 0.6)
-					rating = "bad";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.6)
-					rating = "bad";
-				else if(noteDiff > Conductor.safeZoneOffset * 0.25)
-					rating = "good";
-				else if(noteDiff < Conductor.safeZoneOffset * -0.25)
-					rating = "good";
-				else
-					rating = "sick";
-
+				switch(noteType)
+				{
+				case 0:
+					if(noteDiff > Conductor.safeZoneOffset * 0.8)
+						rating = "shit";
+					else if(noteDiff < Conductor.safeZoneOffset * -0.8)
+						rating = "shit";
+					else if(noteDiff > Conductor.safeZoneOffset * 0.6)
+						rating = "bad";
+					else if(noteDiff < Conductor.safeZoneOffset * -0.6)
+						rating = "bad";
+					else if(noteDiff > Conductor.safeZoneOffset * 0.25)
+						rating = "good";
+					else if(noteDiff < Conductor.safeZoneOffset * -0.25)
+						rating = "good";
+					else
+						rating = "sick";
+				case 1:
+					rating = "boom";
+				}
 				FlxG.watch.addQuick("Note" + this.ID, rating);
 			}
 
@@ -221,7 +229,7 @@ class Note extends FlxSprite
 		{
 			canBeHit = false;
 
-			if (strumTime <= Conductor.songPosition)
+			if (strumTime <= Conductor.songPosition && noteType == 0)
 				wasGoodHit = true;
 		}
 

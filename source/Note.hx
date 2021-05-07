@@ -36,7 +36,7 @@ class Note extends FlxSprite
 
 	public var rating:String = "shit";
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
+	public function new(strumTime:Float, noteData:Int, ?noteType:Int = 0, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
 	{
 		super();
 
@@ -55,6 +55,7 @@ class Note extends FlxSprite
 		this.strumTime = strumTime + FlxG.save.data.offset;
 
 		this.noteData = noteData;
+		this.noteType = noteType;
 
 		var daStage:String = PlayState.curStage;
 
@@ -89,6 +90,11 @@ class Note extends FlxSprite
 			default:
 				frames = Paths.getSparrowAtlas('NOTE_assets');
 
+				animation.addByPrefix('staticLeft', 'arrowLEFT');
+				animation.addByPrefix('staticDown', 'arrowDOWN');
+				animation.addByPrefix('staticUp', 'arrowUP');
+				animation.addByPrefix('staticRight', 'arrowRIGHT');
+
 				animation.addByPrefix('greenScroll', 'green0');
 				animation.addByPrefix('redScroll', 'red0');
 				animation.addByPrefix('blueScroll', 'blue0');
@@ -108,23 +114,42 @@ class Note extends FlxSprite
 				updateHitbox();
 				antialiasing = true;
 		}
-
-		switch (noteData)
+		if(noteType == 0)
 		{
-			case 0:
-				x += swagWidth * 0;
-				animation.play('purpleScroll');
-			case 1:
-				x += swagWidth * 1;
-				animation.play('blueScroll');
-			case 2:
-				x += swagWidth * 2;
-				animation.play('greenScroll');
-			case 3:
-				x += swagWidth * 3;
-				animation.play('redScroll');
+			switch (noteData)
+			{
+				case 0:
+					x += swagWidth * 0;
+					animation.play('purpleScroll');
+				case 1:
+					x += swagWidth * 1;
+					animation.play('blueScroll');
+				case 2:
+					x += swagWidth * 2;
+					animation.play('greenScroll');
+				case 3:
+					x += swagWidth * 3;
+					animation.play('redScroll');
+			}
 		}
-
+		else if(noteType == 1)
+		{
+			switch (noteData)
+			{
+				case 0:
+					x += swagWidth * 0;
+					animation.play('staticLeft');
+				case 1:
+					x += swagWidth * 1;
+					animation.play('staticDown');
+				case 2:
+					x += swagWidth * 2;
+					animation.play('staticUp');
+				case 3:
+					x += swagWidth * 3;
+					animation.play('staticRight');
+			}
+		}
 		// trace(prevNote);
 
 		if (FlxG.save.data.downscroll && isSustainNote)

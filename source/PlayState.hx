@@ -2011,6 +2011,8 @@ class PlayState extends MusicBeatState
 				rating.x = daNote.x;
 				rating.y = strumLine.y;
 				FlxG.sound.play(Paths.sound('boom'));
+				FlxG.sound.play(Paths.sound('boom'));
+				FlxG.sound.play(Paths.sound('boom')); // lol it needs to be loud
 			}
 			else
 			{

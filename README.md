@@ -18,6 +18,7 @@ This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION
 - [Kade M](https://github.com/KadeDev) - Creator of the Kade Engine
 - [Jaymes "Jay" Hayward](https://www.youtube.com/channel/UCVe9gzjzGxMAoubLfo6zdkw) - Charter
 - [kEvin](https://kevinp.carrd.co) - Main Programmer for this Mod
+- [Toumi](https://soundcloud.com/toumitunes) - Creator of the boom sound effect (also a really cool guy)
 
 This game was made with love to Newgrounds and it's community. Extra love to Tom Fulp.
 

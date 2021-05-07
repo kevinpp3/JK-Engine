@@ -90,10 +90,7 @@ class Note extends FlxSprite
 			default:
 				frames = Paths.getSparrowAtlas('NOTE_assets');
 
-				animation.addByPrefix('staticLeft', 'arrowLEFT');
-				animation.addByPrefix('staticDown', 'arrowDOWN');
-				animation.addByPrefix('staticUp', 'arrowUP');
-				animation.addByPrefix('staticRight', 'arrowRIGHT');
+				animation.addByPrefix('bomb', 'bomb');
 
 				animation.addByPrefix('greenScroll', 'green0');
 				animation.addByPrefix('redScroll', 'red0');
@@ -138,17 +135,14 @@ class Note extends FlxSprite
 			{
 				case 0:
 					x += swagWidth * 0;
-					animation.play('staticLeft');
 				case 1:
 					x += swagWidth * 1;
-					animation.play('staticDown');
 				case 2:
 					x += swagWidth * 2;
-					animation.play('staticUp');
 				case 3:
 					x += swagWidth * 3;
-					animation.play('staticRight');
 			}
+			animation.play('bomb');
 		}
 		// trace(prevNote);
 

@@ -145,6 +145,7 @@ class PlayState extends MusicBeatState
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
+	var printerDone:Bool = false;
 	var printerCode:FourthWall;
 	var blackBG:FlxSprite;
 	var printerAssetsNotLoaded:Bool = true;
@@ -1911,28 +1912,32 @@ class PlayState extends MusicBeatState
 			{
 				trace('loading printer assets');
 				camPrinter = new FlxCamera(0, 0, 1280, 720, 1);
-				camPrinter.alpha = 0;
-				camPrinter.visible = true;
-
-				blackBG = new FlxSprite(0, 0);
-				blackBG.loadGraphic(Paths.image('printer-black'));
-				blackBG.setGraphicSize(1280, 720);
-				blackBG.scrollFactor.set();
-				blackBG.cameras = [camPrinter];
+				camPrinter.bgColor.alpha = 0;
 
 				printerCode = new FourthWall();
 				printerCode.sprite.setGraphicSize(1280);
+				printerCode.sprite.updateHitbox();
 				printerCode.sprite.cameras = [camPrinter];
 				printerCode.sprite.y = 0;
 
-				add(blackBG);
+				FlxG.cameras.add(camPrinter);
+				//add(blackBG);
 				add(printerCode.sprite);
 
 				printerAssetsNotLoaded = false;
 			}
 			else
 			{
-				printerCode.update(elapsed);
+				camPrinter.bgColor.alphaFloat -= 4.0 * elapsed;
+				if(!printerDone)
+				{
+					printerCode.update(elapsed);
+				}
+				if(printerCode.offScreen() && !printerDone)
+				{
+					printerDone = true;
+					FlxG.cameras.remove(camPrinter);
+				}
 			}
 		}
 	}

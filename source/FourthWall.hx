@@ -1,5 +1,6 @@
 package;
 
+import haxe.Exception;
 import flixel.FlxSprite;
 
 class PrinterCommand
@@ -65,6 +66,12 @@ class FourthWall
         commands.push(new PrinterCommand(0.3, -10));
         commands.push(new PrinterCommand(0.4, -7));
         commands.push(new PrinterCommand(400, -700000));
+
+        // make the paper reach the top of the screen then go off
+        for(i in 0...commands.length)
+        {
+            commands[i].addY *= 720 / 460;
+        }
 	}
 
     public function update(elapsed:Float):Void

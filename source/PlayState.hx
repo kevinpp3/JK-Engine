@@ -997,7 +997,7 @@ class PlayState extends MusicBeatState
 	{
 		inCutscene = false;
 
-		if(FlxG.save.data.showLeftArrows)
+		if(FlxG.save.data.showLeftArrows && !FlxG.save.data.centerArrows)
 		{
 			generateStaticArrows(0);
 		}

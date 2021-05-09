@@ -118,6 +118,7 @@ class PlayState extends MusicBeatState
 	private var iconP2:HealthIcon;
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
+	private var camNote:FlxCamera;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
@@ -147,6 +148,7 @@ class PlayState extends MusicBeatState
 
 	var printerDone:Bool = false;
 	var printerCode:FourthWall;
+	var horizontalNoteMover:MoveNotesFunny;
 	var blackBG:FlxSprite;
 	var printerAssetsNotLoaded:Bool = true;
 	private var camPrinter:FlxCamera;
@@ -232,10 +234,13 @@ class PlayState extends MusicBeatState
 		// var gameCam:FlxCamera = FlxG.camera;
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
+		camNote = new FlxCamera();
+		camNote.bgColor.alpha = 0;
 		camHUD.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camNote);
 
 		FlxCamera.defaultCameras = [camGame];
 
@@ -830,8 +835,8 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
-		strumLineNotes.cameras = [camHUD];
-		notes.cameras = [camHUD];
+		strumLineNotes.cameras = [camNote];
+		notes.cameras = [camNote];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
@@ -1103,7 +1108,10 @@ class PlayState extends MusicBeatState
 					FlxG.sound.play(Paths.sound('introGo' + altSuffix), 0.6);
 				case 4:
 					if(PlayState.SONG.song.toLowerCase() == 'printer-jam')
+					{
 						printerCode.getSilly();
+						horizontalNoteMover.getSilly();
+					}
 			}
 
 			swagCounter += 1;
@@ -1924,11 +1932,14 @@ class PlayState extends MusicBeatState
 				FlxG.cameras.add(camPrinter);
 				add(printerCode.sprite);
 
+				horizontalNoteMover = new MoveNotesFunny(camHUD.x);
+
 				printerAssetsNotLoaded = false;
 			}
 			else
 			{
-				camPrinter.bgColor.alphaFloat -= 4.0 * elapsed;
+				horizontalNoteMover.update(elapsed);
+				camNote.x = horizontalNoteMover.x;
 				if(!printerDone)
 				{
 					printerCode.update(elapsed);
@@ -1979,7 +1990,7 @@ class PlayState extends MusicBeatState
 			coolText.screenCenter();
 			coolText.x = FlxG.width * 0.55;
 			coolText.y -= 350;
-			coolText.cameras = [camHUD];
+			coolText.cameras = [camNote];
 			//
 	
 			var rating:FlxSprite = new FlxSprite();
@@ -2141,10 +2152,10 @@ class PlayState extends MusicBeatState
 			rating.updateHitbox();
 	
 			#if debug
-			currentTimingShown.cameras = [camHUD];
+			currentTimingShown.cameras = [camNote];
 			#end
-			comboSpr.cameras = [camHUD];
-			rating.cameras = [camHUD];
+			comboSpr.cameras = [camNote];
+			rating.cameras = [camNote];
 
 			var seperatedScore:Array<Int> = [];
 	
@@ -2166,7 +2177,7 @@ class PlayState extends MusicBeatState
 				numScore.screenCenter();
 				numScore.x = rating.x + (43 * daLoop) - 50;
 				numScore.y = rating.y + 100;
-				numScore.cameras = [camHUD];
+				numScore.cameras = [camNote];
 
 				if (!curStage.startsWith('school'))
 				{

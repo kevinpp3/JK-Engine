@@ -3,22 +3,6 @@ package;
 import haxe.Exception;
 import flixel.FlxSprite;
 
-class PrinterCommand
-{
-    public var linear:Float;
-    public var addY:Float;
-    public var sleep:Float;
-    public var doSleep:Bool;
-    
-    public function new(linear:Float, addY:Float, ?sleep:Float = 0, ?doSleep:Bool = false)
-    {
-        this.linear = linear;
-        this.addY = addY;
-        this.sleep = sleep;
-        this.doSleep = doSleep;
-    }
-}
-
 class FourthWall
 {
     private var commands:Array<PrinterCommand> = [];
@@ -70,7 +54,7 @@ class FourthWall
         // make the paper reach the top of the screen then go off
         for(i in 0...commands.length)
         {
-            commands[i].addY *= 720 / 460;
+            commands[i].add *= 720 / 460;
         }
 	}
 
@@ -114,8 +98,8 @@ class FourthWall
 
     private function runCommand(command:PrinterCommand):Void 
     {
-        currentVelocity = command.addY / command.linear;
-        goalY = sprite.y + command.addY;
+        currentVelocity = command.add / command.linear;
+        goalY = sprite.y + command.add;
         if(command.doSleep)
             stopSleepTime = totalElapsed + command.sleep;
     }

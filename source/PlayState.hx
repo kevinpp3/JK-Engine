@@ -151,7 +151,10 @@ class PlayState extends MusicBeatState
 	var printerDone:Bool = false;
 	var printerCode:FourthWall;
 	var printerError:PrintingError;
-	var horizontalNoteMover:MoveNotesFunny;
+	var horizontalNoteMover:MoveNotesFunnyX;
+	var verticalNoteMover:MoveNotesFunnyY;
+	var airHornElapsed:Float = 0.0;
+	var countForAirHorns:Bool = false;
 	var printerAssetsNotLoaded:Bool = true;
 
 	var hitTxt:FlxText;
@@ -1112,7 +1115,9 @@ class PlayState extends MusicBeatState
 					{
 						printerCode.getSilly();
 						horizontalNoteMover.getSilly();
+						verticalNoteMover.getSilly();
 						printerError.getSilly();
+						countForAirHorns = true;
 					}
 			}
 
@@ -1930,7 +1935,8 @@ class PlayState extends MusicBeatState
 				printerCode.sprite.cameras = [camPrinter];
 				printerCode.sprite.y = 0;
 
-				horizontalNoteMover = new MoveNotesFunny(camPrinter.x);
+				horizontalNoteMover = new MoveNotesFunnyX(camPrinter.x);
+				verticalNoteMover = new MoveNotesFunnyY(camNote.y);
 
 				printerError = new PrintingError();
 				printerError.sprite.updateHitbox();
@@ -1945,15 +1951,38 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
+				if(countForAirHorns)
+					airHornElapsed += elapsed;
+				if(airHornElapsed > 53.469 && airHornElapsed < 53.840)
+				{
+					camNote.zoom = ((airHornElapsed - 53.469) / 2 + (53.840 - 53.469)/2) / (53.840 - 53.469);
+				}
+				else if(airHornElapsed > 42.450 && airHornElapsed < 42.800)
+				{
+					camNote.zoom = ((airHornElapsed - 42.450) / 2 + (42.800 - 42.450)/2) / (42.800 - 42.450);
+				}
+				else
+				{
+					camNote.zoom = 1;
+				}
+
 				horizontalNoteMover.update(elapsed);
 				camNote.x = horizontalNoteMover.x;
+				verticalNoteMover.update(elapsed);
+				camNote.y = verticalNoteMover.y;
 
 				printerError.update(elapsed);
 				
 				if(printerError.working())
+				{
 					camError.bgColor.alphaFloat = 0.6 + Math.sin(Math.PI * 4 * printerError.startDelta()) * 0.1;
+					camNote.angle = 90 * printerError.startDelta() / printerError.maxDelta();
+				}
 				else
+				{
 					camError.bgColor.alpha = 0;
+					camNote.angle = 0;
+				}
 
 				if(!printerDone)
 				{

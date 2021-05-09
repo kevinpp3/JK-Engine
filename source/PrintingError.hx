@@ -52,6 +52,11 @@ class PrintingError
         return totalElapsed - stopSleepTime;
     }
 
+    public function maxDelta():Float
+    {
+        return endTime - stopSleepTime;
+    }
+
     public function working():Bool
     {
         return totalElapsed > stopSleepTime && !done();

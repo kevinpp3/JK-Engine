@@ -1565,11 +1565,6 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
-		#if debug
-		if(FlxG.keys.justPressed.SIX)
-			FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, bombs, songScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
-		#end
-
 		if (FlxG.keys.justPressed.NINE)
 		{
 			if (iconP1.animation.curAnim.name == 'bf-old')
@@ -1978,6 +1973,7 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
+		var gotHighScore:Bool = songScore > Highscore.getScore(SONG.song, storyDifficulty);
 		if (SONG.validScore)
 		{
 			#if !switch
@@ -1987,7 +1983,7 @@ class PlayState extends MusicBeatState
 
 		// show you your various hits until you press ENTER
 		trace('WENT BACK TO FREEPLAY??');
-		FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, bombs, songScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
+		FlxG.switchState(new ShowStatState(sicks, goods, bads, shits, misses, bombs, songScore, gotHighScore, accuracy, SONG.song, CoolUtil.difficultyString(), generateRanking()));
 	}
 
 	var endingSong:Bool = false;

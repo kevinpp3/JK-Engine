@@ -119,6 +119,8 @@ class PlayState extends MusicBeatState
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 	private var camNote:FlxCamera;
+	private var camPrinter:FlxCamera;
+	private var camError:FlxCamera;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
@@ -148,10 +150,9 @@ class PlayState extends MusicBeatState
 
 	var printerDone:Bool = false;
 	var printerCode:FourthWall;
+	var printerError:PrintingError;
 	var horizontalNoteMover:MoveNotesFunny;
-	var blackBG:FlxSprite;
 	var printerAssetsNotLoaded:Bool = true;
-	private var camPrinter:FlxCamera;
 
 	var hitTxt:FlxText;
 	
@@ -1111,6 +1112,7 @@ class PlayState extends MusicBeatState
 					{
 						printerCode.getSilly();
 						horizontalNoteMover.getSilly();
+						printerError.getSilly();
 					}
 			}
 
@@ -1923,16 +1925,26 @@ class PlayState extends MusicBeatState
 				camPrinter = new FlxCamera(0, 0, 1280, 720, 1);
 				camPrinter.bgColor.alpha = 0;
 
+				camError = new FlxCamera();
+				camError.bgColor.red = 255;
+				camError.bgColor.alpha = 0;
+
 				printerCode = new FourthWall();
 				printerCode.sprite.setGraphicSize(1280);
 				printerCode.sprite.updateHitbox();
 				printerCode.sprite.cameras = [camPrinter];
 				printerCode.sprite.y = 0;
 
+				horizontalNoteMover = new MoveNotesFunny(camPrinter.x);
+
+				printerError = new PrintingError();
+				printerError.sprite.updateHitbox();
+				printerError.sprite.cameras = [camError];
+
+				FlxG.cameras.add(camError);
 				FlxG.cameras.add(camPrinter);
 				add(printerCode.sprite);
-
-				horizontalNoteMover = new MoveNotesFunny(camHUD.x);
+				add(printerError.sprite);
 
 				printerAssetsNotLoaded = false;
 			}
@@ -1940,6 +1952,14 @@ class PlayState extends MusicBeatState
 			{
 				horizontalNoteMover.update(elapsed);
 				camNote.x = horizontalNoteMover.x;
+
+				printerError.update(elapsed);
+				
+				if(printerError.working())
+					camError.bgColor.alphaFloat = 0.6 + Math.sin(Math.PI * 4 * printerError.startDelta()) * 0.1;
+				else
+					camError.bgColor.alpha = 0;
+
 				if(!printerDone)
 				{
 					printerCode.update(elapsed);

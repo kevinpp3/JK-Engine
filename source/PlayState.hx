@@ -156,6 +156,7 @@ class PlayState extends MusicBeatState
 	var airHornElapsed:Float = 0.0;
 	var countForAirHorns:Bool = false;
 	var printerAssetsNotLoaded:Bool = true;
+	public static var noteSillyTime:Bool = false;
 
 	var hitTxt:FlxText;
 	
@@ -175,6 +176,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		noteSillyTime = false;
 
 		Conductor.safeFrames = 10; // 166ms hit window (j1)
 
@@ -1926,6 +1928,7 @@ class PlayState extends MusicBeatState
 		{
 			if(printerAssetsNotLoaded)
 			{
+				noteSillyTime = true;
 				trace('loading printer assets');
 				camPrinter = new FlxCamera(0, 0, 1280, 720, 1);
 				camPrinter.bgColor.alpha = 0;
@@ -2004,6 +2007,7 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		noteSillyTime = false;
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;

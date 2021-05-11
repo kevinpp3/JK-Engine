@@ -36,6 +36,10 @@ class Note extends FlxSprite
 
 	public var rating:String = "shit";
 
+	public var hasChecked:Bool = false;
+	public var originalX:Float = 0.0;
+	public var posOrNeg = (FlxG.random.bool() ? -1 : 1);
+
 	public function new(strumTime:Float, noteData:Int, ?noteType:Int = 0, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
 	{
 		super();
@@ -194,6 +198,8 @@ class Note extends FlxSprite
 				// prevNote.setGraphicSize();
 			}
 		}
+
+		originalX = x;
 	}
 
 	override function update(elapsed:Float)
@@ -259,6 +265,24 @@ class Note extends FlxSprite
 		{
 			if (alpha > 0.3)
 				alpha = 0.3;
+		}
+
+		if(!hasChecked)
+		{
+			originalX = x;
+			hasChecked = true;
+		}
+		else
+		{
+			if(PlayState.noteSillyTime)
+			{
+				x = originalX + swagWidth * posOrNeg * Math.sin(Math.PI * 2.0 * (y - (FlxG.save.data.downscroll ? 555 : 50)) / 720.0) * (3.5/10.0);
+				//x = originalX + swagWidth * (FlxG.random.bool() ? -1 : 1) * Math.sin(Math.PI * 2.0 * (y - (FlxG.save.data.downscroll ? 555 : 50)) / 720.0) * (3.5/10.0);
+			}
+			else
+			{
+				x = originalX;
+			}
 		}
 	}
 }

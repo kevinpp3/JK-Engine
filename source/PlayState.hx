@@ -826,7 +826,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
-		hitTxt = new FlxText(0, healthBarBG.y - 22, 0, "", 16);
+		hitTxt = new FlxText(0, 0, 0, "", 16);
 		hitTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		hitTxt.scrollFactor.set();
 		add(hitTxt);
@@ -1241,7 +1241,10 @@ class PlayState extends MusicBeatState
 					oldNote = null;
 
 				var swagNote:Note = new Note(daStrumTime, daNoteData, songNotes[3], oldNote, false, FlxG.save.data.centerArrows ? -223 : 50);
-				swagNote.sustainLength = songNotes[2];
+				if(swagNote.noteType == 0)
+					swagNote.sustainLength = songNotes[2];
+				else
+					swagNote.sustainLength = 0;
 				swagNote.scrollFactor.set(0, 0);
 
 				var susLength:Float = swagNote.sustainLength;
@@ -1606,6 +1609,8 @@ class PlayState extends MusicBeatState
 		}
 
 		hitTxt.text = "Sicks:  " + sicks + "\nGoods:  " + goods + "\nBads:   " + bads + "\nShits:  " + shits + "\nMisses: " + misses + "\nBombs:  " + bombs;
+		hitTxt.updateHitbox();
+		hitTxt.y = 720 - hitTxt.height;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{

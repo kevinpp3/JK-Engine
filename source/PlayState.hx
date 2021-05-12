@@ -2401,6 +2401,7 @@ class PlayState extends MusicBeatState
 		var leftR = controls.LEFT_R;
 		
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
+		var bombArray:Array<Bool> = [left, down, up, right];
 
 		// FlxG.watch.addQuick('asdfa', upP);
 		if ((upP || rightP || downP || leftP) && !boyfriend.stunned && generatedMusic)
@@ -2458,6 +2459,8 @@ class PlayState extends MusicBeatState
 							{
 								if (controlArray[coolNote.noteData])
 									goodNoteHit(coolNote);
+								if(coolNote.noteType == 1 && bombArray[coolNote.noteData])
+									goodNoteHit(coolNote);
 								else
 								{
 									var inIgnoreList:Bool = false;
@@ -2471,19 +2474,28 @@ class PlayState extends MusicBeatState
 						}
 						else if (possibleNotes[0].noteData == possibleNotes[1].noteData)
 						{
-							noteCheck(controlArray, daNote);
+							if(daNote.noteType == 0)
+								noteCheck(controlArray, daNote);
+							else if(daNote.noteType == 1)
+								noteCheck(bombArray, daNote, true);
 						}
 						else
 						{
 							for (coolNote in possibleNotes)
 							{
-								noteCheck(controlArray, coolNote);
+								if(coolNote.noteType == 0)
+									noteCheck(controlArray, coolNote);
+								else if(coolNote.noteType == 1)
+									noteCheck(bombArray, coolNote, true);
 							}
 						}
 					}
 					else // regular notes?
 					{	
-						noteCheck(controlArray, daNote);
+						if(daNote.noteType == 0)
+							noteCheck(controlArray, daNote);
+						else if(daNote.noteType == 1)
+							noteCheck(bombArray, daNote, true);
 					}
 					/* 
 						if (controlArray[daNote.noteData])
@@ -2523,7 +2535,7 @@ class PlayState extends MusicBeatState
 			{
 				notes.forEachAlive(function(daNote:Note)
 				{
-					if (daNote.canBeHit && daNote.mustPress && daNote.isSustainNote)
+					if (daNote.canBeHit && daNote.mustPress && (daNote.isSustainNote || daNote.noteType == 1))
 					{
 						switch (daNote.noteData)
 						{
@@ -2696,7 +2708,7 @@ class PlayState extends MusicBeatState
 	var mashing:Int = 0;
 	var mashViolations:Int = 0;
 
-	function noteCheck(controlArray:Array<Bool>, note:Note):Void // sorry lol
+	function noteCheck(controlArray:Array<Bool>, note:Note, isBombCheck = false):Void // sorry lol
 		{
 			if (controlArray[note.noteData])
 			{
@@ -2712,7 +2724,7 @@ class PlayState extends MusicBeatState
 					mashViolations++;
 					goodNoteHit(note, (mashing <= getKeyPresses(note)));
 				}
-				else
+				else if(isBombCheck)
 				{
 					// silly kade kode !!!!!!
 					playerStrums.members[0].animation.play('static');

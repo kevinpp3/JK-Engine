@@ -38,7 +38,9 @@ class Note extends FlxSprite
 
 	public var hasChecked:Bool = false;
 	public var originalX:Float = 0.0;
-	public var posOrNeg = (FlxG.random.bool() ? -1 : 1);
+	public var posOrNeg:Float = (FlxG.random.bool() ? -1 : 1);
+	public var coefficient:Float = 0.0;
+	public var downscroll:Bool = FlxG.save.data.downscroll;
 
 	public function new(strumTime:Float, noteData:Int, ?noteType:Int = 0, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
 	{
@@ -155,6 +157,7 @@ class Note extends FlxSprite
 		
 		if (isSustainNote && prevNote != null)
 		{
+			posOrNeg = prevNote.posOrNeg;
 			noteScore * 0.2;
 			alpha = 0.6;
 
@@ -276,13 +279,20 @@ class Note extends FlxSprite
 		{
 			if(PlayState.noteSillyTime)
 			{
-				x = originalX + swagWidth * posOrNeg * Math.sin(Math.PI * 2.0 * (y - (FlxG.save.data.downscroll ? 555 : 50)) / 720.0) * (3.5/10.0);
-				//x = originalX + swagWidth * (FlxG.random.bool() ? -1 : 1) * Math.sin(Math.PI * 2.0 * (y - (FlxG.save.data.downscroll ? 555 : 50)) / 720.0) * (3.5/10.0);
+				coefficient += elapsed;
+				if(coefficient > 1)
+					coefficient = 1;
 			}
 			else
 			{
-				x = originalX;
+				coefficient -= elapsed;
+				if(coefficient < 0)
+					coefficient = 0;
 			}
+			if(coefficient > 0)
+				x = originalX + coefficient * swagWidth * posOrNeg * Math.sin(Math.PI * 2.0 * (y - (downscroll ? 555 : 50)) / 720.0) * (0.4);
+			if(PlayState.noteGoInsane)
+				x = originalX + FlxG.random.float(-1 * swagWidth/2, swagWidth/2);
 		}
 	}
 }

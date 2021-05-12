@@ -153,10 +153,12 @@ class PlayState extends MusicBeatState
 	var printerError:PrintingError;
 	var horizontalNoteMover:MoveNotesFunnyX;
 	var verticalNoteMover:MoveNotesFunnyY;
-	var airHornElapsed:Float = 0.0;
-	var countForAirHorns:Bool = false;
+	var printerEffectElapsed:Float = 0.0;
+	var countForEffects:Bool = false;
 	var printerAssetsNotLoaded:Bool = true;
 	public static var noteSillyTime:Bool = false;
+	public static var noteGoInsane:Bool = false;
+	private var downscroll:Bool;
 
 	var hitTxt:FlxText;
 	
@@ -177,6 +179,8 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		noteSillyTime = false;
+		noteGoInsane = false;
+		downscroll = FlxG.save.data.downscroll;
 
 		Conductor.safeFrames = 10; // 166ms hit window (j1)
 
@@ -1119,7 +1123,7 @@ class PlayState extends MusicBeatState
 						horizontalNoteMover.getSilly();
 						verticalNoteMover.getSilly();
 						printerError.getSilly();
-						countForAirHorns = true;
+						countForEffects = true;
 					}
 			}
 
@@ -1928,7 +1932,6 @@ class PlayState extends MusicBeatState
 		{
 			if(printerAssetsNotLoaded)
 			{
-				noteSillyTime = true;
 				trace('loading printer assets');
 				camPrinter = new FlxCamera(0, 0, 1280, 720, 1);
 				camPrinter.bgColor.alpha = 0;
@@ -1959,25 +1962,34 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
-				if(countForAirHorns)
-					airHornElapsed += elapsed;
-				if(airHornElapsed > 53.469 && airHornElapsed < 53.840)
+				if(countForEffects)
+					printerEffectElapsed += elapsed;
+				if(printerEffectElapsed > 53.469 && printerEffectElapsed < 53.840)
 				{
-					camNote.zoom = ((airHornElapsed - 53.469) / 2 + (53.840 - 53.469)/2) / (53.840 - 53.469);
+					camNote.zoom = ((printerEffectElapsed - 53.469) / 2 + (53.840 - 53.469)/2) / (53.840 - 53.469);
 				}
-				else if(airHornElapsed > 42.450 && airHornElapsed < 42.800)
+				else if(printerEffectElapsed > 42.450 && printerEffectElapsed < 42.800)
 				{
-					camNote.zoom = ((airHornElapsed - 42.450) / 2 + (42.800 - 42.450)/2) / (42.800 - 42.450);
+					camNote.zoom = ((printerEffectElapsed - 42.450) / 2 + (42.800 - 42.450)/2) / (42.800 - 42.450);
 				}
 				else
 				{
 					camNote.zoom = 1;
 				}
 
+				if(printerEffectElapsed > 61)
+				{
+					noteSillyTime = true;
+				}
+				if(printerEffectElapsed > 70)
+				{
+					noteSillyTime = false;
+				}
+
 				horizontalNoteMover.update(elapsed);
 				camNote.x = horizontalNoteMover.x;
 				verticalNoteMover.update(elapsed);
-				camNote.y = verticalNoteMover.y;
+				camNote.y = (downscroll ? -1.0 : 1.0) * verticalNoteMover.y;
 
 				printerError.update(elapsed);
 				
@@ -1985,11 +1997,13 @@ class PlayState extends MusicBeatState
 				{
 					camError.bgColor.alphaFloat = 0.6 + Math.sin(Math.PI * 4 * printerError.startDelta()) * 0.1;
 					camNote.angle = 90 * printerError.startDelta() / printerError.maxDelta();
+					noteGoInsane = true;
 				}
 				else
 				{
 					camError.bgColor.alpha = 0;
 					camNote.angle = 0;
+					noteGoInsane = false;
 				}
 
 				if(!printerDone)
@@ -2008,6 +2022,7 @@ class PlayState extends MusicBeatState
 	function endSong():Void
 	{
 		noteSillyTime = false;
+		noteGoInsane = false;
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;

@@ -20,6 +20,7 @@ This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION
 - [kEvin](https://kevinp.carrd.co) - Main Programmer for this Mod
 - [Toumi](https://soundcloud.com/toumitunes) - Creator of the boom sound effect (also a really cool guy)
 - [Steve](https://arciwithnoh.newgrounds.com/) - Sprite animator
+- [ClockShaft](https://clockshaft.newgrounds.com/) - Mine sprite drawer
 
 This game was made with love to Newgrounds and it's community. Extra love to Tom Fulp.
 

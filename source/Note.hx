@@ -214,7 +214,11 @@ class Note extends FlxSprite
 			var noteDiff:Float = Math.abs(strumTime - Conductor.songPosition);
 
 			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-				&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset && noteType == 0)
+				&& strumTime < Conductor.songPosition + Conductor.safeZoneOffset 
+				&& noteType == 0 && !isSustainNote)
+				canBeHit = true;
+			else if(strumTime < Conductor.songPosition + Conductor.safeZoneOffset * (0.33)
+				&& noteType == 0 && isSustainNote)
 				canBeHit = true;
 			else if(noteDiff < Conductor.safeZoneOffset * 0.25
 				&& noteDiff > Conductor.safeZoneOffset * -0.25 && noteType == 1)

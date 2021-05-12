@@ -26,6 +26,7 @@ class OptionsMenu extends MusicBeatState
 	{
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		controlsStrings = CoolUtil.coolStringFile(
+			"Toggle Fullscreen\n" +
 			(FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + 
 			"\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + 
 			"\nAccuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on") + 
@@ -90,55 +91,62 @@ class OptionsMenu extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (curSelected != 6)
+				if (curSelected != 7)
 					grpControls.remove(grpControls.members[curSelected]);
 				switch(curSelected)
 				{
 					case 0:
+						FlxG.fullscreen = !FlxG.fullscreen;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Toggle Fullscreen", true, false);
+						ctrl.isMenuItem = true;
+						ctrl.targetY = curSelected;
+						grpControls.add(ctrl);
+
+					case 1:
 						FlxG.save.data.dfjk = !FlxG.save.data.dfjk;
 						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.dfjk ? 'DFJK' : 'WASD'), true, false);
 						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected;
+						ctrl.targetY = curSelected - 1;
 						grpControls.add(ctrl);
 						if (FlxG.save.data.dfjk)
 							controls.setKeyboardScheme(KeyboardScheme.Solo, true);
 						else
 							controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
 						
-					case 1:
+					case 2:
 						FlxG.save.data.downscroll = !FlxG.save.data.downscroll;
 						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll'), true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 1;
-						grpControls.add(ctrl);
-					case 2:
-						FlxG.save.data.accuracyDisplay = !FlxG.save.data.accuracyDisplay;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Accuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 2;
 						grpControls.add(ctrl);
 					case 3:
-						FlxG.save.data.songPosition = !FlxG.save.data.songPosition;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Song Position " + (!FlxG.save.data.songPosition ? "off" : "on"), true, false);
+						FlxG.save.data.accuracyDisplay = !FlxG.save.data.accuracyDisplay;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Accuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 3;
 						grpControls.add(ctrl);
 					case 4:
-						FlxG.save.data.showLeftArrows = !FlxG.save.data.showLeftArrows;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Show Left Arrows " + (!FlxG.save.data.showLeftArrows ? "off" : "on"), true, false);
+						FlxG.save.data.songPosition = !FlxG.save.data.songPosition;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Song Position " + (!FlxG.save.data.songPosition ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 4;
 						grpControls.add(ctrl);
 					case 5:
-						FlxG.save.data.centerArrows = !FlxG.save.data.centerArrows;
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Center Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on"), true, false);
+						FlxG.save.data.showLeftArrows = !FlxG.save.data.showLeftArrows;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Show Left Arrows " + (!FlxG.save.data.showLeftArrows ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 5;
 						grpControls.add(ctrl);
 					case 6:
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fuck You ", true, false);
+						FlxG.save.data.centerArrows = !FlxG.save.data.centerArrows;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Center Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 6;
+						grpControls.add(ctrl);
+					case 7:
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fuck You ", true, false);
+						ctrl.isMenuItem = true;
+						ctrl.targetY = curSelected - 7;
 						grpControls.add(ctrl);
 				}
 			}

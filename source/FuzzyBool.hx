@@ -15,6 +15,21 @@ class FuzzyBool
         return fBool >= 1.0;
     }
 
+    public function absolutelyFalse():Bool
+    {
+        return fBool <= 0.0;
+    }
+
+    public function somewhatTrue():Bool
+    {
+        return fBool > 0.0;
+    }
+
+    public function somewhatFalse():Bool
+    {
+        return fBool < 1.0;
+    }
+
     public function getfBool():Float
     {
         return fBool;

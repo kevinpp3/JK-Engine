@@ -105,6 +105,7 @@ class PlayState extends MusicBeatState
 	private var totalNotesHit:Float = 0;
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
+	private var holdArray:Array<FuzzyBool> = [new FuzzyBool(), new FuzzyBool(), new FuzzyBool(), new FuzzyBool()];
 
 	private var maxHealth:Float = 2;
 	private var healthBarBG:FlxSprite;
@@ -2382,7 +2383,7 @@ class PlayState extends MusicBeatState
 		return false;
 	}
 
-	private function keyShit():Void
+	private function keyShit(elapsed:Float):Void
 	{
 		// HOLDING
 		var up = controls.UP;
@@ -2402,6 +2403,25 @@ class PlayState extends MusicBeatState
 		
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
 		var bombArray:Array<Bool> = [left, down, up, right];
+		if(left)
+			holdArray[0].setfBool(1.0);
+		else
+			holdArray[0].subFromfBool(elapsed / 0.3);
+
+		if(down)
+			holdArray[1].setfBool(1.0);
+		else
+			holdArray[1].subFromfBool(elapsed / 0.3);
+
+		if(up)
+			holdArray[2].setfBool(1.0);
+		else
+			holdArray[2].subFromfBool(elapsed / 0.3);
+		
+		if(right)
+			holdArray[3].setfBool(1.0);
+		else
+			holdArray[3].subFromfBool(elapsed / 0.3);
 
 		// FlxG.watch.addQuick('asdfa', upP);
 		if ((upP || rightP || downP || leftP) && !boyfriend.stunned && generatedMusic)

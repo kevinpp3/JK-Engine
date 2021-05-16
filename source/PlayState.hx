@@ -1905,7 +1905,7 @@ class PlayState extends MusicBeatState
 							notes.remove(daNote, true);
 							daNote.destroy();
 						}
-						else
+						else if(daNote.sustainLength == 0.0)
 						{
 							vocals.volume = 0;
 							noteMiss(daNote.noteData, daNote);
@@ -1932,6 +1932,9 @@ class PlayState extends MusicBeatState
 			if(susMisses[i])
 			{
 				susMisses[i] = false;
+				trace('susMissNoteData');
+				trace(i);
+				trace('');
 				health -= maxHealth * 0.075;
 				if (combo > 5 && gf.animOffsets.exists('sad'))
 				{
@@ -1939,7 +1942,7 @@ class PlayState extends MusicBeatState
 				}
 				combo = 0;
 				misses++;
-				songScore -= 350;
+				songScore -= 700;
 				FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 				switch (i)
 				{
@@ -2530,48 +2533,36 @@ class PlayState extends MusicBeatState
 						{
 							for (coolNote in possibleNotes)
 							{
-								if(!coolNote.tooLate || (coolNote.isSustainNote && holdArray[coolNote.noteType].somewhatTrue()))
-								{
-									if (controlArray[coolNote.noteData])
-										goodNoteHit(coolNote);
-									if(coolNote.noteType == 1 && bombArray[coolNote.noteData])
-										goodNoteHit(coolNote);
-								}
+								if(coolNote.noteType == 0 && !coolNote.isSustainNote)
+									noteCheck(controlArray, coolNote);
+								else if(coolNote.noteType == 1)
+									noteCheck(bombArray, coolNote, true);
 							}
 						}
 						else if (possibleNotes[0].noteData == possibleNotes[1].noteData)
 						{
-							if(!daNote.tooLate || (daNote.isSustainNote && holdArray[daNote.noteType].somewhatTrue()))
-							{
-								if(daNote.noteType == 0)
-									noteCheck(controlArray, daNote);
-								else if(daNote.noteType == 1)
-									noteCheck(bombArray, daNote, true);
-							}
+							if(daNote.noteType == 0 && !daNote.isSustainNote)
+								noteCheck(controlArray, daNote);
+							else if(daNote.noteType == 1)
+								noteCheck(bombArray, daNote, true);
 						}
 						else
 						{
 							for (coolNote in possibleNotes)
 							{
-								if(!coolNote.tooLate || (coolNote.isSustainNote && holdArray[coolNote.noteType].somewhatTrue()))
-								{
-									if(coolNote.noteType == 0)
-										noteCheck(controlArray, coolNote);
-									else if(coolNote.noteType == 1)
-										noteCheck(bombArray, coolNote, true);
-								}
+								if(coolNote.noteType == 0 && !coolNote.isSustainNote)
+									noteCheck(controlArray, coolNote);
+								else if(coolNote.noteType == 1)
+									noteCheck(bombArray, coolNote, true);
 							}
 						}
 					}
 					else // regular notes?
 					{	
-						if(!daNote.tooLate || (daNote.isSustainNote && holdArray[daNote.noteType].somewhatTrue()))
-						{
-							if(daNote.noteType == 0)
-								noteCheck(controlArray, daNote);
-							else if(daNote.noteType == 1)
-								noteCheck(bombArray, daNote, true);
-						}
+						if(daNote.noteType == 0 && !daNote.isSustainNote)
+							noteCheck(controlArray, daNote);
+						else if(daNote.noteType == 1)
+							noteCheck(bombArray, daNote, true);
 					}
 					/* 
 						if (controlArray[daNote.noteData])
@@ -2718,7 +2709,7 @@ class PlayState extends MusicBeatState
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{
-		if (!boyfriend.stunned && daNote.noteType != 1 && !daNote.isSustainNote)
+		if (!boyfriend.stunned && daNote.noteType != 1 && !daNote.isSustainNote && !daNote.notedSusDeath)
 		{
 			health -= maxHealth * 0.075;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -2809,7 +2800,7 @@ class PlayState extends MusicBeatState
 
 	function noteCheck(controlArray:Array<Bool>, note:Note, isBombCheck = false):Void // sorry lol
 	{
-		if (controlArray[note.noteData] || (note.isSustainNote && holdArray[note.noteData].somewhatTrue()))
+		if ((controlArray[note.noteData] && !note.isSustainNote) || (note.isSustainNote && holdArray[note.noteData].somewhatTrue()))
 		{
 			for (b in controlArray) {
 				if (b)
@@ -2818,12 +2809,12 @@ class PlayState extends MusicBeatState
 
 			// ANTI MASH CODE FOR THE BOYS
 
-			//if (mashing <= getKeyPresses(note) && mashViolations < 2)
-			//{
-			//	mashViolations++;
+			if (mashing <= getKeyPresses(note) && mashViolations < 2)
+			{
+				mashViolations++;
 				goodNoteHit(note, (mashing <= getKeyPresses(note)));
-			//}
-			/*else */if(isBombCheck)
+			}
+			else if(isBombCheck)
 			{
 				// silly kade kode !!!!!!
 				playerStrums.members[0].animation.play('static');

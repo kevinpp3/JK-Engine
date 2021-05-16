@@ -210,18 +210,16 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if(isSustainNote && tooLate && !notedSusDeath)
-		{
-			getRootNote().tooLate = true;
-			prevNote.tooLate = true;
-			PlayState.susMisses[noteData] = true;
+		if(isSustainNote && prevNote != null && prevNote.notedSusDeath)
 			notedSusDeath = true;
-		}
-		if(isSustainNote && getRootNote().tooLate && !notedSusDeath)
+		if(!notedSusDeath && isSustainNote && tooLate)
 		{
 			tooLate = true;
 			PlayState.susMisses[noteData] = true;
 			notedSusDeath = true;
+			trace('susDeathNoted');
+			trace(noteData);
+			trace('');
 		}
 
 		if (mustPress)
@@ -317,17 +315,5 @@ class Note extends FlxSprite
 			if(PlayState.noteGoInsane)
 				x = originalX + FlxG.random.float(-1 * swagWidth/2, swagWidth/2);
 		}
-	}
-
-	public function getRootNote():Note
-	{
-		var curNote:Note = prevNote;
-		if(prevNote == null)
-			return this;
-		while(curNote == null || curNote.isSustainNote || curNote.noteData != noteData)
-		{
-			curNote = curNote.prevNote;
-		}
-		return curNote;
 	}
 }

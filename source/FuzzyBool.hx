@@ -35,6 +35,15 @@ class FuzzyBool
         return fBool;
     }
 
+    public function getNormalizedfBool():Float
+    {
+        if(absolutelyFalse())
+            return 0.0;
+        if(absolutelyTrue())
+            return 1.0;
+        return fBool;
+    }
+
     public function setfBool(amount:Float):Void
     {
         fBool = amount;

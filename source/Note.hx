@@ -36,6 +36,7 @@ class Note extends FlxSprite
 
 	public var rating:String = "shit";
 
+	public var notedSusDeath:Bool = false;
 	public var hasChecked:Bool = false;
 	public var originalX:Float = 0.0;
 	public var posOrNeg:Float = (FlxG.random.bool() ? -1 : 1);
@@ -209,6 +210,20 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
+		if(isSustainNote && tooLate && !notedSusDeath)
+		{
+			getRootNote().tooLate = true;
+			prevNote.tooLate = true;
+			PlayState.susMisses[noteData] = true;
+			notedSusDeath = true;
+		}
+		if(isSustainNote && getRootNote().tooLate && !notedSusDeath)
+		{
+			tooLate = true;
+			PlayState.susMisses[noteData] = true;
+			notedSusDeath = true;
+		}
+
 		if (mustPress)
 		{
 			var noteDiff:Float = Math.abs(strumTime - Conductor.songPosition);
@@ -225,6 +240,9 @@ class Note extends FlxSprite
 				&& noteDiff > Conductor.safeZoneOffset * -0.25 && noteType == 1)
 				canBeHit = true;
 			else
+				canBeHit = false;
+
+			if(tooLate)
 				canBeHit = false;
 
 			if(canBeHit)
@@ -299,5 +317,17 @@ class Note extends FlxSprite
 			if(PlayState.noteGoInsane)
 				x = originalX + FlxG.random.float(-1 * swagWidth/2, swagWidth/2);
 		}
+	}
+
+	public function getRootNote():Note
+	{
+		var curNote:Note = prevNote;
+		if(prevNote == null)
+			return this;
+		while(curNote == null || curNote.isSustainNote || curNote.noteData != noteData)
+		{
+			curNote = curNote.prevNote;
+		}
+		return curNote;
 	}
 }

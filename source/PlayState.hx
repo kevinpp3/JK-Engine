@@ -107,7 +107,7 @@ class PlayState extends MusicBeatState
 	private var ss:Bool = false;
 	private var holdArray:Array<FuzzyBool> = [new FuzzyBool(), new FuzzyBool(), new FuzzyBool(), new FuzzyBool()];
 	public static var susMisses:Array<Bool> = [false, false, false, false];
-	public static var ignoreDirection:Array<Bool> = [false, false, false, false];
+	private var ignoreDirection:Array<Bool> = [false, false, false, false];
 
 	private var maxHealth:Float = 2;
 	private var healthBarBG:FlxSprite;
@@ -182,7 +182,6 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		susMisses = [false, false, false, false];
-		ignoreDirection = [false, false, false, false];
 		noteSillyTime = false;
 		noteGoInsane = false;
 		downscroll = FlxG.save.data.downscroll;
@@ -1907,7 +1906,7 @@ class PlayState extends MusicBeatState
 							notes.remove(daNote, true);
 							daNote.destroy();
 						}
-						else
+						else if(daNote.sustainLength == 0.0)
 						{
 							vocals.volume = 0;
 							noteMiss(daNote.noteData, daNote);
@@ -2057,7 +2056,6 @@ class PlayState extends MusicBeatState
 	function endSong():Void
 	{
 		susMisses = [false, false, false, false];
-		ignoreDirection = [false, false, false, false];
 		noteSillyTime = false;
 		noteGoInsane = false;
 		canPause = false;
@@ -2358,11 +2356,6 @@ class PlayState extends MusicBeatState
 		return Math.abs(FlxMath.roundDecimal(value1, 1) - FlxMath.roundDecimal(value2, 1)) < unimportantDifference;
 	}
 
-	var upHold:Bool = false;
-	var downHold:Bool = false;
-	var rightHold:Bool = false;
-	var leftHold:Bool = false;	
-
 	private function closestNote(notes:Array<Note>):Note
 	{
 		notes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
@@ -2388,13 +2381,6 @@ class PlayState extends MusicBeatState
 			{
 				if(Math.abs(Conductor.songPosition - note1.strumTime) < Math.abs(Conductor.songPosition - note2.strumTime))
 					return note1;
-				if(note1.noteData == note2.noteData)
-				{
-					if(note1.isSustainNote && !note2.isSustainNote)
-						return note2;
-					if(!note1.isSustainNote && note2.isSustainNote)
-						return note1;
-				}
 			}
 			if(note2.noteType == 1)
 			{
@@ -2467,100 +2453,77 @@ class PlayState extends MusicBeatState
 			holdArray[3].subFromfBool(elapsed / decayTime);
 
 		// FlxG.watch.addQuick('asdfa', upP);
-
-		if ((up || right || down || left) && !boyfriend.stunned && generatedMusic)
-		{
-			repPresses++;
-			boyfriend.holdTimer = 0;
-
-			var possibleNotes:Array<Note> = [];
-			var possibleSusNotes:Array<Note> = [];
-
-			notes.forEachAlive(function(daNote:Note)
+		if ((upP || rightP || downP || leftP) && !boyfriend.stunned && generatedMusic)
 			{
-				if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
+				repPresses++;
+				boyfriend.holdTimer = 0;
+	
+				var possibleNotes:Array<Note> = [];
+	
+				notes.forEachAlive(function(daNote:Note)
 				{
-					// the sorting probably doesn't need to be in here? who cares lol
-					if(!daNote.isSustainNote)
+					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
 					{
+						// the sorting probably doesn't need to be in here? who cares lol
 						possibleNotes.push(daNote);
 					}
-					else
-					{
-						possibleSusNotes.push(daNote);
-					}
-				}
-			});
+				});
 
-			possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-			possibleSusNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
-			
-			while(hasDuplicateNoteData(possibleNotes))
-			{
-				for(i in 0...possibleNotes.length)
+				possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+						
+				while(hasDuplicateNoteData(possibleNotes))
 				{
-					var doBreak:Bool = false;
-					for(j in 0...possibleNotes.length)
+					for(i in 0...possibleNotes.length)
 					{
-						if(i != j && possibleNotes[i] != possibleNotes[j] && possibleNotes[i].noteData == possibleNotes[j].noteData && !possibleNotes[i].isSustainNote && !possibleNotes[j].isSustainNote)
+						var doBreak:Bool = false;
+						for(j in 0...possibleNotes.length)
 						{
-							if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i] && !doBreak)
+							if(i != j && possibleNotes[i].noteData == possibleNotes[j].noteData && !possibleNotes[i].isSustainNote && !possibleNotes[j].isSustainNote)
 							{
-								possibleNotes.remove(possibleNotes[j]);
-								doBreak = true;
+								if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[i] && !doBreak)
+								{
+									possibleNotes.remove(possibleNotes[j]);
+									doBreak = true;
+								}
+								else if(!possibleNotes[i].isSustainNote && !doBreak)
+								{
+									possibleNotes.remove(possibleNotes[i]);
+									doBreak = true;
+								}
+								if(possibleNotes[i].tooLate && !doBreak)
+								{
+									possibleNotes.remove(possibleNotes[i]);
+									doBreak = true;
+								}
 							}
-							else if(closerNote(possibleNotes[i], possibleNotes[j]) == possibleNotes[j] && !doBreak)
-							{
-								possibleNotes.remove(possibleNotes[i]);
-								doBreak = true;
-							}
+							if(doBreak) break;
 						}
 						if(doBreak) break;
 					}
-					if(doBreak) break;
 				}
-			}
-			while(hasDuplicateNoteData(possibleSusNotes))
-			{
-				for(i in 0...possibleSusNotes.length)
+
+				for(note in possibleNotes)
 				{
-					var doBreak:Bool = false;
-					for(j in 0...possibleSusNotes.length)
+					if(!note.isSustainNote)
 					{
-						if(i != j && possibleSusNotes[i] != possibleSusNotes[j] && possibleSusNotes[i].noteData == possibleSusNotes[j].noteData)
-						{
-							if(closerNote(possibleSusNotes[i], possibleSusNotes[j]) == possibleSusNotes[i] && !doBreak)
-							{
-								possibleSusNotes.remove(possibleSusNotes[j]);
-								doBreak = true;
-							}
-							else if(closerNote(possibleSusNotes[i], possibleSusNotes[j]) == possibleSusNotes[j] && !doBreak)
-							{
-								possibleSusNotes.remove(possibleSusNotes[i]);
-								doBreak = true;
-							}
-						}
-						if(doBreak) break;
+						ignoreDirection[note.noteData] = false;
+						if(controlArray[note.noteData])
+							goodNoteHit(note);
 					}
-					if(doBreak) break;
+					else 
+					{
+						if(!ignoreDirection[note.noteData] && holdArray[note.noteData].somewhatTrue())
+						{
+							goodNoteHit(note);
+						}
+						else if(holdArray[note.noteData].absolutelyFalse())
+						{
+							ignoreDirection[note.noteData] = true;
+							note.tooLate = true;
+							susMisses[note.noteData] = true;
+						}
+					}
 				}
-			}
-
-			for(note in possibleNotes)
-			{
-				if(controlArray[note.noteData])
-				{
-					goodNoteHit(note);
-					ignoreDirection[note.noteData] = false;
-				}
-			}
-
-			for(note in possibleSusNotes)
-			{
-				if(!ignoreDirection[note.noteData] && holdArray[note.noteData].somewhatTrue())
-					goodNoteHit(note);
-				else if(holdArray[note.noteData].absolutelyFalse())
-					ignoreDirection[note.noteData] = true;
 			}
 	
 			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left)
@@ -2571,63 +2534,62 @@ class PlayState extends MusicBeatState
 				}
 			}
 	
-			playerStrums.forEach(function(spr:FlxSprite)
-			{
-				switch (spr.ID)
+				playerStrums.forEach(function(spr:FlxSprite)
 				{
-				case 2:
-					if (upP && spr.animation.curAnim.name != 'confirm')
+					switch (spr.ID)
 					{
-						spr.animation.play('pressed');
-						trace('play');
+						case 2:
+							if (upP && spr.animation.curAnim.name != 'confirm')
+							{
+								spr.animation.play('pressed');
+								trace('play');
+							}
+							if (upR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+						
+						case 3:
+							if (rightP && spr.animation.curAnim.name != 'confirm')
+								spr.animation.play('pressed');
+							if (rightR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+						case 1:
+							if (downP && spr.animation.curAnim.name != 'confirm')
+								spr.animation.play('pressed');
+							if (downR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+						case 0:
+							if (leftP && spr.animation.curAnim.name != 'confirm')
+								spr.animation.play('pressed');
+							if (leftR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
 					}
-					if (upR)
+					
+					if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
 					{
-						spr.animation.play('static');
-						repReleases++;
+						spr.centerOffsets();
+						spr.offset.x -= 13;
+						spr.offset.y -= 13;
 					}
-				
-				case 3:
-					if (rightP && spr.animation.curAnim.name != 'confirm')
-						spr.animation.play('pressed');
-					if (rightR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
-				case 1:
-					if (downP && spr.animation.curAnim.name != 'confirm')
-						spr.animation.play('pressed');
-					if (downR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
-				case 0:
-					if (leftP && spr.animation.curAnim.name != 'confirm')
-						spr.animation.play('pressed');
-					if (leftR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
-				}
-				
-				if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
-				{
-					spr.centerOffsets();
-					spr.offset.x -= 13;
-					spr.offset.y -= 13;
-				}
-				else
-					spr.centerOffsets();
-			});
-		}
+					else
+						spr.centerOffsets();
+				});
 	}
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
 	{
-		if (!boyfriend.stunned && daNote.noteType == 0 && !daNote.isSustainNote)
+		if (!boyfriend.stunned && daNote.noteType != 1 && !daNote.isSustainNote && !daNote.notedSusDeath)
 		{
 			health -= maxHealth * 0.075;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -2663,10 +2625,6 @@ class PlayState extends MusicBeatState
 
 			updateAccuracy();
 		}
-		else if(!boyfriend.stunned && daNote.noteType == 0 && daNote.isSustainNote)
-		{
-			daNote.alpha = 0.3;
-		}
 	}
 
 	/*function badNoteCheck()
@@ -2690,17 +2648,42 @@ class PlayState extends MusicBeatState
 		}
 	*/
 	function updateAccuracy() 
+		{
+			if (misses > 0 || accuracy < 96)
+				fc = false;
+			else
+				fc = true;
+			totalPlayed += 1;
+			accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
+		}
+
+
+	function getKeyPresses(note:Note):Int
 	{
-		if (misses > 0 || accuracy < 96)
-			fc = false;
-		else
-			fc = true;
-		totalPlayed += 1;
-		accuracy = Math.max(0, totalNotesHit / totalPlayed * 100);
+		var possibleNotes:Array<Note> = []; // copypasted but you already know that
+
+		notes.forEachAlive(function(daNote:Note)
+		{
+			if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
+			{
+				possibleNotes.push(daNote);
+				possibleNotes.sort((a, b) -> Std.int(a.strumTime - b.strumTime));
+			}
+		});
+		if (possibleNotes.length == 1)
+			return possibleNotes.length + 1;
+		return possibleNotes.length;
 	}
+	
+	var mashing:Int = 0;
+	var mashViolations:Int = 0;
 
 	function goodNoteHit(note:Note, resetMashViolation = true):Void
 	{
+
+		if (resetMashViolation)
+			mashViolations--;
+
 		if (!note.wasGoodHit)
 		{
 			if (!note.isSustainNote)
@@ -2710,6 +2693,7 @@ class PlayState extends MusicBeatState
 			}
 			else
 				totalNotesHit += 1;
+
 
 			switch (note.noteData)
 			{

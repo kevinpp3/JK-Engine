@@ -36,7 +36,6 @@ class Note extends FlxSprite
 
 	public var rating:String = "shit";
 
-	public var notedSusDeath:Bool = false;
 	public var hasChecked:Bool = false;
 	public var originalX:Float = 0.0;
 	public var posOrNeg:Float = (FlxG.random.bool() ? -1 : 1);
@@ -272,8 +271,8 @@ class Note extends FlxSprite
 
 		if (tooLate)
 		{
-			if (alpha > 0.3)
-				alpha = 0.3;
+			if (alpha > 0.25)
+				alpha = 0.25;
 		}
 
 		if(!hasChecked)

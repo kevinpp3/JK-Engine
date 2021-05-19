@@ -2432,7 +2432,7 @@ class PlayState extends MusicBeatState
 			if(fb.somewhatTrue())
 				checkInput = true;
 		}
-		if (checkInput && !boyfriend.stunned && generatedMusic)
+		if (!boyfriend.stunned && generatedMusic)
 		{
 			repPresses++;
 			boyfriend.holdTimer = 0;
@@ -2464,7 +2464,7 @@ class PlayState extends MusicBeatState
 								possibleNotes.remove(possibleNotes[j]);
 								doBreak = true;
 							}
-							else if(!possibleNotes[i].isSustainNote && !doBreak)
+							else if(!doBreak)
 							{
 								possibleNotes.remove(possibleNotes[i]);
 								doBreak = true;
@@ -2478,28 +2478,34 @@ class PlayState extends MusicBeatState
 
 			for(note in possibleNotes)
 			{
-				if(!note.isSustainNote)
+				if(!note.isSustainNote && note.noteType == 0)
 				{
 					if(controlArray[note.noteData])
 					{
 						goodNoteHit(note);
-						ignoreDirection[note.noteData] = false;
-					}
-					else 
-					{
-						ignoreDirection[note.noteData] = true;
 					}
 				}
-				else 
+				else if(!note.isSustainNote && note.noteType == 1)
 				{
-					if(!ignoreDirection[note.noteData] && holdArray[note.noteData].somewhatTrue())
+					if(bombArray[note.noteData])
 					{
 						goodNoteHit(note);
 					}
-					else if(holdArray[note.noteData].absolutelyFalse())
+				}
+				else if(note.isSustainNote && note.noteType == 0)
+				{
+					if(holdArray[note.noteData].somewhatTrue() && note.getRootNote().wasGoodHit)
 					{
-						ignoreDirection[note.noteData] = true;
+						goodNoteHit(note);
+					}
+					if(holdArray[note.noteData].absolutelyFalse() && note.getRootNote().wasGoodHit)
+					{
 						susMisses[note.noteData] = true;
+						note.tooLate = true;
+					}
+					if(note.getRootNote().tooLate)
+					{
+						note.tooLate = true;
 					}
 				}
 			}
@@ -2667,7 +2673,7 @@ class PlayState extends MusicBeatState
 		}
 
 
-	function getKeyPresses(note:Note):Int
+	/*function getKeyPresses(note:Note):Int
 	{
 		var possibleNotes:Array<Note> = []; // copypasted but you already know that
 
@@ -2682,16 +2688,10 @@ class PlayState extends MusicBeatState
 		if (possibleNotes.length == 1)
 			return possibleNotes.length + 1;
 		return possibleNotes.length;
-	}
-	
-	var mashing:Int = 0;
-	var mashViolations:Int = 0;
+	}*/
 
-	function goodNoteHit(note:Note, resetMashViolation = true):Void
+	function goodNoteHit(note:Note):Void
 	{
-
-		if (resetMashViolation)
-			mashViolations--;
 
 		if (!note.wasGoodHit)
 		{

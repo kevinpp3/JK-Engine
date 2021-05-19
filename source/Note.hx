@@ -219,13 +219,19 @@ class Note extends FlxSprite
 				canBeHit = true;
 			else if(strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * (0.5))
 				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * (0.5))
-				&& noteType == 0 && isSustainNote)
+				&& noteType == 0 && isSustainNote && getRootNote().wasGoodHit)
 				canBeHit = true;
 			else if(noteDiff < Conductor.safeZoneOffset * 0.25
 				&& noteDiff > Conductor.safeZoneOffset * -0.25 && noteType == 1)
 				canBeHit = true;
 			else
 				canBeHit = false;
+
+			if(isSustainNote && (prevNote.tooLate || getRootNote().tooLate))
+			{
+				tooLate = true;
+				canBeHit = false;
+			}
 
 			if(canBeHit)
 			{
@@ -299,5 +305,12 @@ class Note extends FlxSprite
 			if(PlayState.noteGoInsane)
 				x = originalX + FlxG.random.float(-1 * swagWidth/2, swagWidth/2);
 		}
+	}
+
+	public function getRootNote()
+	{
+		if(!isSustainNote)
+			return this;
+		return prevNote.getRootNote();
 	}
 }

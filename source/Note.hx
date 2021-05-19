@@ -41,6 +41,7 @@ class Note extends FlxSprite
 	public var posOrNeg:Float = (FlxG.random.bool() ? -1 : 1);
 	public var coefficient:Float = 0.0;
 	public var downscroll:Bool = FlxG.save.data.downscroll;
+	public var isFinalSustain:Bool = false;
 
 	public function new(strumTime:Float, noteData:Int, ?noteType:Int = 0, ?prevNote:Note, ?sustainNote:Bool = false, ?startx:Int = 50)
 	{
@@ -167,12 +168,20 @@ class Note extends FlxSprite
 			{
 				case 2:
 					animation.play('greenholdend');
+					isFinalSustain = true;
+					prevNote.isFinalSustain = false;
 				case 3:
 					animation.play('redholdend');
+					isFinalSustain = true;
+					prevNote.isFinalSustain = false;
 				case 1:
 					animation.play('blueholdend');
+					isFinalSustain = true;
+					prevNote.isFinalSustain = false;
 				case 0:
 					animation.play('purpleholdend');
+					isFinalSustain = true;
+					prevNote.isFinalSustain = false;
 			}
 
 			updateHitbox();
@@ -233,6 +242,11 @@ class Note extends FlxSprite
 				canBeHit = false;
 			}
 
+			if(isSustainNote && getRootNote().wasGoodHit)
+			{
+				alpha = 0.6 - 0.5 * Math.abs(1.0 - PlayState.holdArray[noteData].getNormalizedfBool());
+			}
+
 			if(canBeHit)
 			{
 				switch(noteType)
@@ -277,8 +291,8 @@ class Note extends FlxSprite
 
 		if (tooLate)
 		{
-			if (alpha > 0.25)
-				alpha = 0.25;
+			if (alpha > 0.1)
+				alpha = 0.1;
 		}
 
 		if(!hasChecked)

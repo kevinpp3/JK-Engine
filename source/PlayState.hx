@@ -105,7 +105,7 @@ class PlayState extends MusicBeatState
 	private var totalNotesHit:Float = 0;
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
-	private var holdArray:Array<FuzzyBool> = [new FuzzyBool(), new FuzzyBool(), new FuzzyBool(), new FuzzyBool()];
+	public static var holdArray:Array<FuzzyBool> = [new FuzzyBool(), new FuzzyBool(), new FuzzyBool(), new FuzzyBool()];
 	public static var susMisses:Array<Bool> = [false, false, false, false];
 	public static var ignoreDirection:Array<Bool> = [false, false, false, false];
 
@@ -181,6 +181,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		holdArray = [new FuzzyBool(), new FuzzyBool(), new FuzzyBool(), new FuzzyBool()];
 		susMisses = [false, false, false, false];
 		ignoreDirection = [false, false, false, false];
 		noteSillyTime = false;
@@ -213,6 +214,12 @@ class PlayState extends MusicBeatState
 				storyDifficultyText = "Normal";
 			case 2:
 				storyDifficultyText = "Hard";
+			case 3:
+				storyDifficultyText = "Harder";
+			case 4:
+				storyDifficultyText = "Hardest";
+			case 5:
+				storyDifficultyText = "Cataclysmic";
 		}
 
 		iconRPC = SONG.player2;
@@ -2027,6 +2034,7 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		holdArray = [new FuzzyBool(), new FuzzyBool(), new FuzzyBool(), new FuzzyBool()];
 		susMisses = [false, false, false, false];
 		ignoreDirection = [false, false, false, false];
 		noteSillyTime = false;
@@ -2080,35 +2088,37 @@ class PlayState extends MusicBeatState
 
 			var daRating = daNote.rating;
 
+			var healthCoefficient:Float = daNote.sustainLength > 0.0 ? 0.5 : 1.0;
+
 			switch(daRating)
 			{
 				case 'shit':
 					combo = 0;
-					score = -200;
-					health -= maxHealth * 0.05;
+					score = -200 * healthCoefficient;
+					health -= maxHealth * healthCoefficient * 0.05;
 					ss = false;
 					shits++;
 				case 'bad':
 					daRating = 'bad';
-					score = -100;
-					health -= maxHealth * 0.025;
+					score = -100 * healthCoefficient;
+					health -= maxHealth * healthCoefficient * 0.025;
 					combo = 0;
 					ss = false;
 					bads++;
 				case 'good':
 					daRating = 'good';
-					score = 200;
-					health += maxHealth * 0.025;
+					score = 200 * healthCoefficient;
+					health += maxHealth * healthCoefficient * 0.025;
 					ss = false;
 					goods++;
 				case 'sick':
 					if (health < 2)
-						health += maxHealth * 0.05;
+						health += maxHealth * healthCoefficient * 0.05;
 					score = 350;
 					sicks++;
 				case 'boom':
 					daRating = 'boom';
-					health -= maxHealth * 0.075;
+					health -= maxHealth * healthCoefficient * 0.075;
 					score = -350;
 					bombs++;
 			}
@@ -2426,12 +2436,6 @@ class PlayState extends MusicBeatState
 			holdArray[3].subFromfBool(elapsed / decayTime);
 
 		// FlxG.watch.addQuick('asdfa', upP);
-		var checkInput:Bool = false;
-		for(fb in holdArray)
-		{
-			if(fb.somewhatTrue())
-				checkInput = true;
-		}
 		if (!boyfriend.stunned && generatedMusic)
 		{
 			repPresses++;
@@ -2496,6 +2500,11 @@ class PlayState extends MusicBeatState
 				{
 					if(holdArray[note.noteData].somewhatTrue() && note.getRootNote().wasGoodHit)
 					{
+						if(note.isFinalSustain)
+						{
+							songScore += 175;
+							health += maxHealth * 0.025;
+						}
 						goodNoteHit(note);
 					}
 					if(holdArray[note.noteData].absolutelyFalse() && note.getRootNote().wasGoodHit)
@@ -2516,14 +2525,13 @@ class PlayState extends MusicBeatState
 			if(susMisses[i])
 			{
 				susMisses[i] = false;
-				health -= maxHealth * 0.15;
+
+				// change health deduction later?
+				health -= maxHealth * 0.05;
 				if (combo > 5 && gf.animOffsets.exists('sad'))
 				{
 					gf.playAnim('sad');
 				}
-				combo = 0;
-				misses++;
-				songScore -= 700;
 				FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 				switch (i)
 				{
@@ -2536,7 +2544,6 @@ class PlayState extends MusicBeatState
 					case 3:
 						boyfriend.playAnim('singRIGHTmiss', true);
 				}
-				totalNotesHit--;
 				updateAccuracy();
 			}
 		}

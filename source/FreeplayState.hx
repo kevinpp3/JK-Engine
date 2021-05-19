@@ -198,6 +198,8 @@ class FreeplayState extends MusicBeatState
 			changeSelection(1);
 		}
 
+		changeDiff(0);
+
 		if (controls.LEFT_P)
 			changeDiff(-1);
 		if (controls.RIGHT_P)
@@ -229,10 +231,20 @@ class FreeplayState extends MusicBeatState
 	{
 		curDifficulty += change;
 
-		if (curDifficulty < 0)
-			curDifficulty = 2;
-		if (curDifficulty > 2)
-			curDifficulty = 0;
+		if(songs[curSelected].songName.toLowerCase() == "galaxy-collapse")
+		{
+			if (curDifficulty < 2)
+				curDifficulty = 5;
+			if (curDifficulty > 5)
+				curDifficulty = 2;
+		}
+		else 
+		{
+			if (curDifficulty < 0)
+				curDifficulty = 2;
+			if (curDifficulty > 2)
+				curDifficulty = 0;
+		}
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
@@ -246,6 +258,12 @@ class FreeplayState extends MusicBeatState
 				diffText.text = 'NORMAL';
 			case 2:
 				diffText.text = "HARD";
+			case 3:
+				diffText.text = "HARDER";
+			case 4:
+				diffText.text = "HARDEST";
+			case 5:
+				diffText.text = "CATACLYSMIC";
 		}
 	}
 

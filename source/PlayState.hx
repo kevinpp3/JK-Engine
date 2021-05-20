@@ -2095,30 +2095,30 @@ class PlayState extends MusicBeatState
 				case 'shit':
 					combo = 0;
 					score = -200 * healthCoefficient;
-					health -= maxHealth * healthCoefficient * 0.05;
+					health -= maxHealth * 0.075;
 					ss = false;
 					shits++;
 				case 'bad':
 					daRating = 'bad';
 					score = -100 * healthCoefficient;
-					health -= maxHealth * healthCoefficient * 0.025;
+					health -= maxHealth * 0.025;
 					combo = 0;
 					ss = false;
 					bads++;
 				case 'good':
 					daRating = 'good';
 					score = 200 * healthCoefficient;
-					health += maxHealth * healthCoefficient * 0.025;
+					health += maxHealth * healthCoefficient * 0.02;
 					ss = false;
 					goods++;
 				case 'sick':
 					if (health < 2)
-						health += maxHealth * healthCoefficient * 0.05;
+						health += maxHealth * healthCoefficient * 0.04;
 					score = 350;
 					sicks++;
 				case 'boom':
 					daRating = 'boom';
-					health -= maxHealth * healthCoefficient * 0.075;
+					health -= maxHealth * 0.12;
 					score = -350;
 					bombs++;
 			}
@@ -2613,7 +2613,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!boyfriend.stunned && daNote.noteType != 1 && !daNote.isSustainNote)
 		{
-			health -= maxHealth * 0.075;
+			health -= maxHealth * 0.08;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');

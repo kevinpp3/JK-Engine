@@ -2714,13 +2714,13 @@ class PlayState extends MusicBeatState
 			switch (note.noteData)
 			{
 				case 2:
-					boyfriend.playAnim('singUP', true);
+					boyfriend.playAnim('singUP');
 				case 3:
-					boyfriend.playAnim('singRIGHT', true);
+					boyfriend.playAnim('singRIGHT');
 				case 1:
-					boyfriend.playAnim('singDOWN', true);
+					boyfriend.playAnim('singDOWN');
 				case 0:
-					boyfriend.playAnim('singLEFT', true);
+					boyfriend.playAnim('singLEFT');
 			}
 
 			playerStrums.forEach(function(spr:FlxSprite)

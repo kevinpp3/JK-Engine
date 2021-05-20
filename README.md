@@ -1,11 +1,30 @@
 This mod is a collection of songs chosen and charted by Jay, with some changes to the input system I added to make the game's input system closer to that of OpenITG.
 
-Here are some YouTube links to see my (admittedly imperfect) playthroughs of the songs included in this mod:
+## Song Names
+```
+- 16 Night is a Long Time					IRON ATTACK!			n/a
+- Armageddon [Remix]						LeaF				https://soundcloud.com/leaf-7/armageddon
+- The 2017 Bad Apple Rock Cover (Sam Luff Ver.)			Studio Yuraki			https://youtu.be/dNE9oa3pTIc
+- Everything will freeze					Undead Corporation		n/a
+- Flight of the Bumblebee[Metal arrangement]			Leo Terents			https://youtu.be/9Te10RBel6s
+- FREEDOM DiVE							Xi				https://youtu.be/k-3y2LVF_SE
+- From Nothing							kEvin & Davie Paige		n/a
+- Galaxy Collapse						Kurokotei			https://soundcloud.com/dialgadu77
+- Night Of Nights [NITRO Remix]					Nick Nitro			https://www.youtube.com/watch?v=l3EPExPBKw4
+- Printer Jam							Mistabishi			https://youtu.be/6q0oV4dYcCE
+- The Big Black							The Quick Brown Fox		https://youtu.be/kyUtGNIFx5c
+- Through The Fire and The Flames				Dragonforce			https://youtu.be/0jgrCKhxE1s
+- Tune Out							Azrael				https://youtu.be/P9y77czgtBA
 
-- [Armageddon](https://youtu.be/6Y3yvVQFYfI)
-
-- [The Big Black](https://youtu.be/10iaKnmIwKo)
-
+```
+## Reference Charts
+```
+Freedom Dive (Hard)						Nandii, Zaia
+Galaxy Collapse							Mat
+Printer Jam (Hard)						WinDEU
+Through The Fire and The Flames (Hard)				B. Abear
+The Big Black (Normal)						Rynker
+```
 **HUGE NOTICE**
 
 This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION**. This will probably never be official, so don't get confused.
@@ -19,12 +38,17 @@ This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION
 - [Jaymes "Jay" Hayward](https://www.youtube.com/channel/UCVe9gzjzGxMAoubLfo6zdkw) - Charter
 - [kEvin](https://kevinp.carrd.co) - Main Programmer for this Mod
 - [Toumi](https://soundcloud.com/toumitunes) - Creator of the boom sound effect (also a really cool guy)
-- [Steve](https://arciwithnoh.newgrounds.com/) - Sprite animator
-- [ClockShaft](https://clockshaft.newgrounds.com/) - Mine sprite drawer
+- [Steve](https://arciwithnoh.newgrounds.com/) - Artist/Animator/Playtester
+- [ClockShaft](https://clockshaft.newgrounds.com/) - Arist/Animator
+- [0th](https://reddit.com/u/mest0shai) - Artist/Animator/Playtester
+- Fia - Artist/Animator
+- [Davie Paige](https://www.instagram.com/daviepaige/) - The guy I collaborated with to make "From Nothing"
+- Spook - Playtester
+- Dreaming - Playtester
+
+**If I am missing credits, please email me! I read my emails every day and I'm happy to give credits where credit is due.**
 
 This game was made with love to Newgrounds and it's community. Extra love to Tom Fulp.
-
-If I am missing credits, please email me! I read my emails every day and I'm happy to give credits where credit is due.
 
 ## Build instructions
 

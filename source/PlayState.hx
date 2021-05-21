@@ -261,8 +261,8 @@ class PlayState extends MusicBeatState
 		camHUD.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camNote);
+		FlxG.cameras.add(camHUD);
 
 		FlxCamera.defaultCameras = [camGame];
 
@@ -2435,6 +2435,8 @@ class PlayState extends MusicBeatState
 		else
 			holdArray[3].subFromfBool(elapsed / decayTime);
 
+		var anyGoodHits:Bool = false;
+
 		// FlxG.watch.addQuick('asdfa', upP);
 		if (!boyfriend.stunned && generatedMusic)
 		{
@@ -2486,6 +2488,7 @@ class PlayState extends MusicBeatState
 				{
 					if(controlArray[note.noteData])
 					{
+						anyGoodHits = true;
 						goodNoteHit(note);
 					}
 				}
@@ -2493,6 +2496,7 @@ class PlayState extends MusicBeatState
 				{
 					if(bombArray[note.noteData])
 					{
+						anyGoodHits = true;
 						goodNoteHit(note);
 					}
 				}
@@ -2505,6 +2509,7 @@ class PlayState extends MusicBeatState
 							songScore += 175;
 							health += maxHealth * 0.025;
 						}
+						anyGoodHits = true;
 						goodNoteHit(note);
 					}
 					if(holdArray[note.noteData].absolutelyFalse() && note.getRootNote().wasGoodHit)
@@ -2548,12 +2553,16 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left)
+		var anyHolds:Bool = false;
+		for(fb in holdArray)
 		{
-			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-			{
-				boyfriend.playAnim('idle');
-			}
+			if(anyGoodHits || fb.somewhatTrue())
+				anyHolds = true;
+		}
+
+		if (!anyHolds)
+		{
+			boyfriend.playAnim('idle');
 		}
 
 		playerStrums.forEach(function(spr:FlxSprite)

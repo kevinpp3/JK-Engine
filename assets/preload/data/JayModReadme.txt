@@ -1,1 +1,0 @@
-thebigblack - there is no difference between easy, normal, and hard charts

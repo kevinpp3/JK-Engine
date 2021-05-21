@@ -270,7 +270,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('armageddon');
+			SONG = Song.loadFromJson('tutorial');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -674,6 +674,7 @@ class PlayState extends MusicBeatState
 				if (isStoryMode)
 				{
 					camPos.x += 600;
+					tweenCamIn();
 				}
 
 			case "spooky":
@@ -1420,6 +1421,12 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	function tweenCamIn():Void
+	{
+		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
+	}
+	
+
 	override function openSubState(SubState:FlxSubState)
 	{
 		if (paused)
@@ -1752,6 +1759,11 @@ class PlayState extends MusicBeatState
 
 				if (dad.curCharacter == 'mom')
 					vocals.volume = 1;
+
+				if (SONG.song.toLowerCase() == 'tutorial')
+				{
+					tweenCamIn();
+				}
 			}
 
 			if (PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
@@ -1865,8 +1877,8 @@ class PlayState extends MusicBeatState
 	
 					if (!daNote.mustPress && daNote.wasGoodHit)
 					{
-						//if (SONG.song != 'Armageddon' && SONG.song != 'The-Big-Black')
-						//	camZooming = true;
+						if (SONG.song != 'Tutorial')
+							camZooming = true;
 	
 						var altAnim:String = "";
 	
@@ -2923,15 +2935,15 @@ class PlayState extends MusicBeatState
 			boyfriend.playAnim('idle');
 		}
 
-		/*if (curBeat % 8 == 7 && curSong == 'Bopeebo')
+		if (curBeat % 8 == 7 && curSong == 'Bopeebo')
 		{
 			boyfriend.playAnim('hey', true);
 
-			if ((SONG.song == 'Armageddon' || SONG.song == 'The-Big-Black' || SONG.song == 'Printer-Jam') && dad.curCharacter == 'gf')
+			if (SONG.song == 'Tutorial' && dad.curCharacter == 'gf')
 			{
 				dad.playAnim('cheer', true);
 			}
-		}*/
+		}
 
 		switch (curStage)
 		{

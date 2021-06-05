@@ -122,7 +122,6 @@ class PlayState extends MusicBeatState
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 	private var camNote:FlxCamera;
-	private var camPrinter:FlxCamera;
 	private var camError:FlxCamera;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
@@ -151,14 +150,6 @@ class PlayState extends MusicBeatState
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 
-	var printerDone:Bool = false;
-	var printerCode:FourthWall;
-	var printerError:PrintingError;
-	var horizontalNoteMover:MoveNotesFunnyX;
-	var verticalNoteMover:MoveNotesFunnyY;
-	var printerEffectElapsed:Float = 0.0;
-	var countForEffects:Bool = false;
-	var printerAssetsNotLoaded:Bool = true;
 	public static var noteSillyTime:Bool = false;
 	public static var noteGoInsane:Bool = false;
 	private var downscroll:Bool;
@@ -1130,14 +1121,6 @@ class PlayState extends MusicBeatState
 					});
 					FlxG.sound.play(Paths.sound('introGo' + altSuffix), 0.6);
 				case 4:
-					if(PlayState.SONG.song.toLowerCase() == 'printer-jam')
-					{
-						printerCode.getSilly();
-						horizontalNoteMover.getSilly();
-						verticalNoteMover.getSilly();
-						printerError.getSilly();
-						countForEffects = true;
-					}
 			}
 
 			swagCounter += 1;
@@ -1953,95 +1936,6 @@ class PlayState extends MusicBeatState
 			endSong();
 		#end
 
-		if(PlayState.SONG.song.toLowerCase() == 'printer-jam')
-		{
-			if(printerAssetsNotLoaded)
-			{
-				trace('loading printer assets');
-				camPrinter = new FlxCamera(0, 0, 1280, 720, 1);
-				camPrinter.bgColor.alpha = 0;
-
-				camError = new FlxCamera();
-				camError.bgColor.red = 255;
-				camError.bgColor.alpha = 0;
-
-				printerCode = new FourthWall();
-				printerCode.sprite.setGraphicSize(1280);
-				printerCode.sprite.updateHitbox();
-				printerCode.sprite.cameras = [camPrinter];
-				printerCode.sprite.y = 0;
-
-				horizontalNoteMover = new MoveNotesFunnyX(camPrinter.x);
-				verticalNoteMover = new MoveNotesFunnyY(camNote.y);
-
-				printerError = new PrintingError();
-				printerError.sprite.updateHitbox();
-				printerError.sprite.cameras = [camError];
-
-				FlxG.cameras.add(camError);
-				FlxG.cameras.add(camPrinter);
-				add(printerCode.sprite);
-				add(printerError.sprite);
-
-				printerAssetsNotLoaded = false;
-			}
-			else
-			{
-				if(countForEffects)
-					printerEffectElapsed += elapsed;
-				if(printerEffectElapsed > 53.469 && printerEffectElapsed < 53.840)
-				{
-					camNote.zoom = ((printerEffectElapsed - 53.469) / 2 + (53.840 - 53.469)/2) / (53.840 - 53.469);
-				}
-				else if(printerEffectElapsed > 42.450 && printerEffectElapsed < 42.800)
-				{
-					camNote.zoom = ((printerEffectElapsed - 42.450) / 2 + (42.800 - 42.450)/2) / (42.800 - 42.450);
-				}
-				else
-				{
-					camNote.zoom = 1;
-				}
-
-				if(printerEffectElapsed > 61)
-				{
-					noteSillyTime = true;
-				}
-				if(printerEffectElapsed > 70)
-				{
-					noteSillyTime = false;
-				}
-
-				horizontalNoteMover.update(elapsed);
-				camNote.x = horizontalNoteMover.x;
-				verticalNoteMover.update(elapsed);
-				camNote.y = (downscroll ? -1.0 : 1.0) * verticalNoteMover.y;
-
-				printerError.update(elapsed);
-				
-				if(printerError.working())
-				{
-					camError.bgColor.alphaFloat = 0.6 + Math.sin(Math.PI * 4 * printerError.startDelta()) * 0.1;
-					camNote.angle = 90 * printerError.startDelta() / printerError.maxDelta();
-					noteGoInsane = true;
-				}
-				else
-				{
-					camError.bgColor.alpha = 0;
-					camNote.angle = 0;
-					noteGoInsane = false;
-				}
-
-				if(!printerDone)
-				{
-					printerCode.update(elapsed);
-				}
-				if(printerCode.offScreen() && !printerDone)
-				{
-					printerDone = true;
-					FlxG.cameras.remove(camPrinter);
-				}
-			}
-		}
 	}
 
 	function endSong():Void

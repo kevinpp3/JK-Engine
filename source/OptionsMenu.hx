@@ -32,8 +32,7 @@ class OptionsMenu extends MusicBeatState
 			"\nAccuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on") + 
 			"\nSong Position " + (!FlxG.save.data.songPosition ? "off" : "on") +
 			"\nShow Left Arrows " + (!FlxG.save.data.showLeftArrows ? "off" : "on") +
-			"\nCenter Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on") +
-			"\nFuck You");
+			"\nCenter Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on"));
 		
 		trace(controlsStrings);
 
@@ -142,11 +141,6 @@ class OptionsMenu extends MusicBeatState
 						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Center Arrows " + (!FlxG.save.data.centerArrows ? "off" : "on"), true, false);
 						ctrl.isMenuItem = true;
 						ctrl.targetY = curSelected - 6;
-						grpControls.add(ctrl);
-					case 7:
-						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, "Fuck You ", true, false);
-						ctrl.isMenuItem = true;
-						ctrl.targetY = curSelected - 7;
 						grpControls.add(ctrl);
 				}
 			}

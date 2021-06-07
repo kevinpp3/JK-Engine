@@ -1,30 +1,5 @@
-This mod is a collection of songs chosen and charted by Jay, with some changes to the input system I added to make the game's input system closer to that of OpenITG.
+This is a modification of Kade Engine 1.3 with an input system that closely follows that of other rhythm games like OpenITG.
 
-## Song Names
-```
-- 16 Night is a Long Time					IRON ATTACK!			n/a
-- Armageddon [Remix]						LeaF				https://soundcloud.com/leaf-7/armageddon
-- The 2017 Bad Apple Rock Cover (Sam Luff Ver.)			Studio Yuraki			https://youtu.be/dNE9oa3pTIc
-- Everything will freeze					Undead Corporation		n/a
-- Flight of the Bumblebee[Metal arrangement]			Leo Terents			https://youtu.be/9Te10RBel6s
-- FREEDOM DiVE							Xi				https://youtu.be/k-3y2LVF_SE
-- From Nothing							kEvin & Davie Paige		n/a
-- Galaxy Collapse						Kurokotei			https://soundcloud.com/dialgadu77
-- Night Of Nights [NITRO Remix]					Nick Nitro			https://www.youtube.com/watch?v=l3EPExPBKw4
-- Printer Jam							Mistabishi			https://youtu.be/6q0oV4dYcCE
-- The Big Black							The Quick Brown Fox		https://youtu.be/kyUtGNIFx5c
-- Through The Fire and The Flames				Dragonforce			https://youtu.be/0jgrCKhxE1s
-- Tune Out							Azrael				https://youtu.be/P9y77czgtBA
-
-```
-## Reference Charts
-```
-Freedom Dive (Hard)						Nandii, Zaia
-Galaxy Collapse							Mat
-Printer Jam (Hard)						WinDEU
-Through The Fire and The Flames (Hard)				B. Abear
-The Big Black (Normal)						Rynker
-```
 **HUGE NOTICE**
 
 This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION**. This will probably never be official, so don't get confused.
@@ -43,7 +18,6 @@ This is a **MOD**. This is not Vanilla and should be treated as a **MODIFICATION
 - [0th](https://reddit.com/u/mest0shai) - Artist/Animator/Playtester
 - Fia - Artist/Animator
 - [ChazbillYT](https://www.youtube.com/channel/UC8SJ69agmZMWOQfLpxD7omQ) - Artist
-- [Davie Paige](https://www.instagram.com/daviepaige/) - The guy I collaborated with to make "From Nothing"
 - Spook - Playtester
 - Dreaming - Playtester
 

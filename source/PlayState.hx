@@ -2059,51 +2059,42 @@ class PlayState extends MusicBeatState
 			var daRating = daNote.rating;
 
 			var healthCoefficient:Float = daNote.sustainLength > 0.0 ? 0.5 : 1.0;
-
+			var addHealth:Float = 0;
 			switch(daRating)
 			{
 				case 'shit':
 					combo = 0;
 					score = -200 * healthCoefficient;
-					health -= maxHealth * 0.075;
+					addHealth -= maxHealth * 0.075;
 					ss = false;
 					shits++;
 				case 'bad':
 					daRating = 'bad';
 					score = -100 * healthCoefficient;
-					health -= maxHealth * 0.025;
+					addHealth -= maxHealth * 0.025;
 					combo = 0;
 					ss = false;
 					bads++;
 				case 'good':
 					daRating = 'good';
 					score = 200 * healthCoefficient;
-					health += maxHealth * healthCoefficient * 0.02;
+					addHealth += maxHealth * healthCoefficient * 0.02;
 					ss = false;
 					goods++;
 				case 'sick':
 					if (health < 2)
-						health += maxHealth * healthCoefficient * 0.04;
+						addHealth += maxHealth * healthCoefficient * 0.04;
 					score = 350;
 					sicks++;
 				case 'boom':
 					daRating = 'boom';
-					health -= maxHealth * 0.12;
+					addHealth -= maxHealth * 0.12;
 					score = -350;
 					bombs++;
 			}
-
-			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
-	
-			songScore += Math.round(score);
-	
-			/* if (combo > 60)
-					daRating = 'sick';
-				else if (combo > 12)
-					daRating = 'good'
-				else if (combo > 4)
-					daRating = 'bad';
-			 */
+			if(daNote.jumpID != -1 && !Note.hitIDs.contains(daNote.jumpID))
+				songScore += Math.round(score);
+				health += addHealth;
 	
 			var pixelShitPart1:String = "";
 			var pixelShitPart2:String = '';
@@ -2419,7 +2410,6 @@ class PlayState extends MusicBeatState
 			{
 				if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate)
 				{
-					// the sorting probably doesn't need to be in here? who cares lol
 					possibleNotes.push(daNote);
 				}
 			});
@@ -2452,6 +2442,27 @@ class PlayState extends MusicBeatState
 				}
 			}
 
+			for(note1 in possibleNotes)
+			{
+				for(note2 in possibleNotes)
+				{
+					if(note1 != note2)
+					{
+						if(NearlyEquals(note1.strumTime, note2.strumTime, 0.1) && note1.jumpID == -1 && note2.jumpID == -1)
+						{
+							var newID:Int = -1;
+							while(Note.usedIDs.contains(newID))
+							{
+								newID++;
+							}
+							note1.jumpID = newID;
+							note2.jumpID = newID;
+							Note.usedIDs.push(newID);
+						}
+					}
+				}
+			}
+
 			for(note in possibleNotes)
 			{
 				if(!note.isSustainNote && note.noteType == 0)
@@ -2460,6 +2471,10 @@ class PlayState extends MusicBeatState
 					{
 						anyGoodHits = true;
 						goodNoteHit(note);
+						if(note.jumpID != -1 && !Note.hitIDs.contains(note.jumpID))
+						{
+							Note.hitIDs.push(note.jumpID);
+						}
 					}
 				}
 				else if(!note.isSustainNote && note.noteType == 1)

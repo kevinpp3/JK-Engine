@@ -2058,7 +2058,7 @@ class PlayState extends MusicBeatState
 
 			var daRating = daNote.rating;
 
-			var healthCoefficient:Float = daNote.sustainLength > 0.0 ? 0.5 : 1.0;
+			var healthCoefficient:Float = daNote.startsSustain ? 0.5 : 1.0;
 			var addHealth:Float = 0;
 			switch(daRating)
 			{
@@ -2092,10 +2092,13 @@ class PlayState extends MusicBeatState
 					score = -350;
 					bombs++;
 			}
-			if(daNote.jumpID != -1 && !Note.hitIDs.contains(daNote.jumpID))
+			
+			if((daNote.jumpID != -1 && !Note.hitIDs.contains(daNote.jumpID)) || daNote.jumpID == -1)
+			{
 				songScore += Math.round(score);
 				health += addHealth;
-	
+			}
+
 			var pixelShitPart1:String = "";
 			var pixelShitPart2:String = '';
 	
@@ -2491,7 +2494,7 @@ class PlayState extends MusicBeatState
 					{
 						if(note.isFinalSustain)
 						{
-							songScore += 175;
+							songScore += 100;
 							health += maxHealth * 0.025;
 						}
 						anyGoodHits = true;
